@@ -1,7 +1,10 @@
-package com.sharipov.dogs;
+package com.sharipov.dogs.ResponseStructures;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class Breeds {
 
@@ -10,7 +13,7 @@ public class Breeds {
     private String status;
     @SerializedName("message")
     @Expose
-    private Message message;
+    private HashMap<String, List<Object>> message;
 
     public String getStatus() {
         return status;
@@ -20,11 +23,11 @@ public class Breeds {
         this.status = status;
     }
 
-    public Message getMessage() {
+    public HashMap<String, List<Object>> getMessage() {
         return message;
     }
 
-    public void setMessage(Message message) {
+    public void setMessage(HashMap<String, List<Object>> message) {
         this.message = message;
     }
 

@@ -1,5 +1,6 @@
-package com.sharipov.dogs;
+package com.sharipov.dogs.ResponseStructures;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ public class Message {
 
     @SerializedName("affenpinscher")
     @Expose
-    private Map<String, List<String>> affenpinscher = null;
+    private HashMap<String, List<Object>> affenpinscher = null;
     @SerializedName("african")
     @Expose
     private List<Object> african = null;
@@ -267,11 +268,11 @@ public class Message {
     @Expose
     private List<String> wolfhound = null;
 
-    public Map<String, List<String>> getAffenpinscher() {
+    public HashMap<String, List<Object>> getAffenpinscher() {
         return affenpinscher;
     }
 
-    public void setAffenpinscher(Map<String, List<String>> affenpinscher) {
+    public void setAffenpinscher(HashMap<String, List<Object>> affenpinscher) {
         this.affenpinscher = affenpinscher;
     }
 

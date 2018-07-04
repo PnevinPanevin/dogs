@@ -1,4 +1,7 @@
-package com.sharipov.dogs;
+package com.sharipov.dogs.ResponseStructures;
+
+import com.sharipov.dogs.ResponseStructures.Breeds;
+import com.sharipov.dogs.ResponseStructures.RandomImage;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
