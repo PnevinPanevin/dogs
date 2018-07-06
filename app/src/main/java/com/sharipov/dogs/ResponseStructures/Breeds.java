@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class Breeds {
 
@@ -13,7 +14,7 @@ public class Breeds {
     private String status;
     @SerializedName("message")
     @Expose
-    private HashMap<String, List<Object>> message;
+    private HashMap<String, List<String>> message;
 
     public String getStatus() {
         return status;
@@ -23,13 +24,15 @@ public class Breeds {
         this.status = status;
     }
 
-    public HashMap<String, List<Object>> getMessage() {
+    public HashMap<String, List<String>> getMessage() {
         return message;
     }
 
-    public void setMessage(HashMap<String, List<Object>> message) {
+    public void setMessage(HashMap<String, List<String>> message) {
         this.message = message;
     }
 
-
+    public Set<String> getKeys(){
+        return message.keySet();
+    }
 }
