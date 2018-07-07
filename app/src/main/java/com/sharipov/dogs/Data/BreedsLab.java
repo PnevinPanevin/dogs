@@ -8,12 +8,14 @@ import com.sharipov.dogs.ResponseStructures.Api;
 import com.sharipov.dogs.ResponseStructures.Breeds;
 import com.sharipov.dogs.ResponseStructures.RandomImage;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,32 +66,9 @@ public class BreedsLab {
                     breedObjectList.add(new BreedObject(breed, subBreedList, null));
                 }
 
-                Log.d(TAG, "onResponse: " + breedObjectList.size());
                 onGetBreedListener.onSuccess(breedObjectList);
+                Log.d(TAG, "onResponse: " + breedObjectList.size());
 
-                for (BreedObject b : breedObjectList) {
-                    String subBreed = "";
-                    List<String> subBreedList = b.getSubBreeds();
-
-                    Log.d(TAG, "onResponse: " + b.getBreed());
-
-                    if (b.getSubBreeds().size() != 0) {
-                        Random random = new Random();
-                        subBreed = subBreedList.get(random.nextInt(subBreedList.size())) + "/";
-                    }
-
-                    getImageUri(b.getBreed(), subBreed, new OnGetImageListener() {
-                        @Override
-                        public void onSuccess(String imageUri) {
-                            b.setImageUri(imageUri);
-                        }
-
-                        @Override
-                        public void onFail(Throwable t) {
-                            Log.d(TAG, "onFail: " + t);
-                        }
-                    });
-                }
 //                if (checkLoadAll(breedObjectList)) {
 //                    onGetBreedListener.onSuccess(breedObjectList);
 //                }
@@ -111,7 +90,8 @@ public class BreedsLab {
                 if (randomImage != null) {
                     onGetImageListener.onSuccess(randomImage.getMessage());
                     //Log.d(TAG, "onSuccess: " + randomImage.getMessage());
-                } else Log.d(TAG, "onResponse: " + "\n******************\n" + breed + " " + subBreed + "\n******************");
+                } else
+                    Log.d(TAG, "onResponse: " + "\n******************\n" + breed + " " + subBreed + "\n******************");
             }
 
             @Override
@@ -128,6 +108,24 @@ public class BreedsLab {
             @Override
             public void onSuccess(List<BreedObject> breedObjects) {
                 BreedsLab.this.breedObjectList = breedObjects;
+
+                for (BreedObject b : breedObjectList) {
+                    String breed = b.getBreed();
+                    String subBreed = getRandomSubBreed(b);
+
+                    getImageUri(breed, subBreed, new OnGetImageListener() {
+                        @Override
+                        public void onSuccess(String imageUri) {
+                            b.setImageUri(imageUri);
+                        }
+
+                        @Override
+                        public void onFail(Throwable t) {
+                            Log.d(TAG, "onFail: " + t);
+                        }
+                    });
+                }
+
                 Log.d(TAG, "onSuccess: " + breedObjectList.size());
             }
 
@@ -136,6 +134,7 @@ public class BreedsLab {
                 Toast.makeText(context, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
         return breedObjectList;
     }
 
@@ -149,5 +148,15 @@ public class BreedsLab {
             }
         }
         return passTheCheck;
+    }
+
+    private String getRandomSubBreed(BreedObject b){
+        String subBreed = "";
+//        List<String> subBreedList = b.getSubBreeds();
+//        if (b.getSubBreeds().size() != 0) {
+//            Random random = new Random();
+//            subBreed = subBreedList.get(random.nextInt(subBreedList.size())) + "/";
+//        }
+        return subBreed;
     }
 }

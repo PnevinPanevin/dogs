@@ -1,5 +1,7 @@
 package com.sharipov.dogs.ResponseStructures;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,8 +9,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
-public class Breeds {
+public class Breeds{
 
     @SerializedName("status")
     @Expose
@@ -36,4 +39,5 @@ public class Breeds {
     public Set<String> getKeys(){
         return message.keySet();
     }
+
 }
