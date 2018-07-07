@@ -1,6 +1,7 @@
 package com.sharipov.dogs.Data;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.sharipov.dogs.ResponseStructures.Api;
@@ -8,6 +9,7 @@ import com.sharipov.dogs.ResponseStructures.Breeds;
 import com.sharipov.dogs.ResponseStructures.RandomImage;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class BreedsLab {
+
+    private final String TAG = "qqq";
     private Api api;
     private HashMap<String, List<String>> breedsHashMap;
     private Context context;
@@ -26,7 +30,13 @@ public class BreedsLab {
     public interface OnGetBreedListener {
         void onSuccess(List<BreedObject> breedObjects);
 
-        void onFalue(Throwable t);
+        void onFail(Throwable t);
+    }
+
+    public interface OnGetImageListener {
+        void onSuccess(String imageUri);
+
+        void onFail(Throwable t);
     }
 
     public BreedsLab(Context context) {
@@ -37,7 +47,7 @@ public class BreedsLab {
                 .create(Api.class);
     }
 
-    public void getBreedsHashMap(OnGetBreedListener listener) {
+    private void getBreedsHashMap(OnGetBreedListener onGetBreedListener) {
         breedObjectList = new LinkedList<>(); //data
         Call<Breeds> callBreeds = api.getBreeds();
         callBreeds.enqueue(new Callback<Breeds>() {
@@ -46,78 +56,83 @@ public class BreedsLab {
                 Breeds breeds = response.body();
                 breedsHashMap = breeds.getMessage();
 
+                Log.d(TAG, "onResponse: Breeds");
+
                 for (Map.Entry<String, List<String>> entry : breedsHashMap.entrySet()) {
                     String breed = entry.getKey();
                     List<String> subBreedList = entry.getValue();
                     breedObjectList.add(new BreedObject(breed, subBreedList, null));
                 }
 
+                Log.d(TAG, "onResponse: " + breedObjectList.size());
+                onGetBreedListener.onSuccess(breedObjectList);
+
                 for (BreedObject b : breedObjectList) {
                     String subBreed = "";
                     List<String> subBreedList = b.getSubBreeds();
+
+                    Log.d(TAG, "onResponse: " + b.getBreed());
+
                     if (b.getSubBreeds().size() != 0) {
                         Random random = new Random();
                         subBreed = subBreedList.get(random.nextInt(subBreedList.size())) + "/";
                     }
-                    Call<RandomImage> callBreeds = api.getRandomImage(b.getBreed(), subBreed);
-                    callBreeds.enqueue(new Callback<RandomImage>() {
+
+                    getImageUri(b.getBreed(), subBreed, new OnGetImageListener() {
                         @Override
-                        public void onResponse(Call<RandomImage> call, Response<RandomImage> response) {
-                            RandomImage randomImage = response.body();
-                            b.setImageUri(randomImage.getMessage());
+                        public void onSuccess(String imageUri) {
+                            b.setImageUri(imageUri);
                         }
 
                         @Override
-                        public void onFailure(Call<RandomImage> call, Throwable t) {
-                            Toast.makeText(context, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                            listener.onFalue(t);
+                        public void onFail(Throwable t) {
+                            Log.d(TAG, "onFail: " + t);
                         }
                     });
                 }
-                if (checkLoadAll(breedObjectList)) {
-                    listener.onSuccess(breedObjectList);
-                }
+//                if (checkLoadAll(breedObjectList)) {
+//                    onGetBreedListener.onSuccess(breedObjectList);
+//                }
             }
 
             @Override
             public void onFailure(Call<Breeds> call, Throwable t) {
-                Toast.makeText(context, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                listener.onFalue(t);
+                onGetBreedListener.onFail(t);
             }
         });
     }
 
-//    private void getImageUri(HashMap<String, List<String>> map, String subBreed) {
-//        String breed = "";
-//        List<String> breedList = map.get(subBreed);
-//        if (breedList.size() != 0) {
-//            Random random = new Random();
-//            breed = breedList.get(random.nextInt(breedList.size())) + "/";
-//        }
-//        Call<RandomImage> call = api.getRandomImage(subBreed, breed);
-//        call.enqueue(new Callback<RandomImage>() {
-//            @Override
-//            public void onResponse(Call<RandomImage> call, Response<RandomImage> response) {
-//                RandomImage randomImage = response.body();
-//                imageUri = randomImage.getMessage();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<RandomImage> call, Throwable t) {
-//                Toast.makeText(context, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
+    private void getImageUri(String breed, String subBreed, OnGetImageListener onGetImageListener) {
+        Call<RandomImage> callBreeds = api.getRandomImage(breed, subBreed);
+        callBreeds.enqueue(new Callback<RandomImage>() {
+            @Override
+            public void onResponse(Call<RandomImage> call, Response<RandomImage> response) {
+                RandomImage randomImage = response.body();
+                if (randomImage != null) {
+                    onGetImageListener.onSuccess(randomImage.getMessage());
+                    //Log.d(TAG, "onSuccess: " + randomImage.getMessage());
+                } else Log.d(TAG, "onResponse: " + "\n******************\n" + breed + " " + subBreed + "\n******************");
+            }
+
+            @Override
+            public void onFailure(Call<RandomImage> call, Throwable t) {
+                Toast.makeText(context, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                onGetImageListener.onFail(t);
+                Log.d(TAG, "onFailure: " + t);
+            }
+        });
+    }
 
     public List<BreedObject> getBreedObjectList() {
         getBreedsHashMap(new OnGetBreedListener() {
             @Override
             public void onSuccess(List<BreedObject> breedObjects) {
                 BreedsLab.this.breedObjectList = breedObjects;
+                Log.d(TAG, "onSuccess: " + breedObjectList.size());
             }
 
             @Override
-            public void onFalue(Throwable t) {
+            public void onFail(Throwable t) {
                 Toast.makeText(context, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });

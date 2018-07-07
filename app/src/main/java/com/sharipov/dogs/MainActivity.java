@@ -1,8 +1,13 @@
 package com.sharipov.dogs;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
+
 import com.sharipov.dogs.Data.BreedObject;
 import com.sharipov.dogs.Data.BreedsLab;
 import com.sharipov.dogs.Data.MyAdapter;
@@ -17,12 +22,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        int spanCount = 2;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+        {
+            spanCount = 3;
+        }
+
         BreedsLab breedsLab = new BreedsLab(getApplicationContext());
         List<BreedObject> breedObjects = breedsLab.getBreedObjectList();
 
         recyclerView = findViewById(R.id.recyclerView);
         myAdapter = new MyAdapter(getApplicationContext(),breedObjects);
+        myAdapter.setOnItemClickListener((position) -> {
+
+                //здесь будет переход в другую активити
+            });
         recyclerView.setAdapter(myAdapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),spanCount));
     }
 
 //        imageView.setOnClickListener((View v) -> {
@@ -46,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 //    }
 //
 //    void randomAfricanCall(HashMap<String, List<String>> map) {
-//        String subBreed = "african";//todo запилить метод выдающий картинку в зависимости от subBreed
+//        String subBreed = "african";
 //        String breed = "";
 //        List<String> breedList = map.get(subBreed);
 //        if (breedList.size() != 0) {
