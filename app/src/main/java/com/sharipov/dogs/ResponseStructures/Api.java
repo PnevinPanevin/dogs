@@ -19,7 +19,12 @@ public interface Api {
     @GET("breeds/image/random")
     Call<RandomImage> getRandomImage();
 
-    @GET("breed/{subBreed}/{breed}images/random")
-    Call<RandomImage> getRandomImage(@Path("subBreed") String subBreed, @Path("breed") String breed);
+    @GET("breed/{subBreed}/images/random")
+    Call<RandomImage> getBreedImage(@Path("subBreed") String subBreed);
 
+    @GET("breed/{subBreed}/{breed}/images/random")
+    Call<RandomImage> getSubBreedImage(@Path("subBreed") String subBreed, @Path("breed") String breed);
+
+    @GET("breed/{breed}/list")
+    Call<SubBreeds> getSubBreedsList(@Path("breed") String breed);
 }

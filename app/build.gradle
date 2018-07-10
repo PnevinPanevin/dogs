@@ -25,7 +25,6 @@ android {
 dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.1.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
-    //Конвертер JSON, можно, если предпочитаете, использовать Jackson
     implementation 'com.android.support:recyclerview-v7:27.1.0' //RecyclerView
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.0'

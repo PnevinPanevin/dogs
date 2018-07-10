@@ -1,4 +1,4 @@
-package com.sharipov.dogs.Data;
+package com.sharipov.dogs.activity_breeds_list;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -7,36 +7,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sharipov.dogs.Data.BreedObject;
 import com.sharipov.dogs.R;
 
 import java.util.List;
 
-public class MyAdapter extends RecyclerView.Adapter<MyHolder>{
+public class BreedsListAdapter extends RecyclerView.Adapter<BreedsListHolder>{
 
     private LayoutInflater layoutInflater;
     private List<BreedObject> breedObjects; //любой вид коллекции
     private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener{
-        void onItemClick(int position);
+        void onItemClick(BreedObject breedObject);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
-    public MyAdapter(Context context, List<BreedObject> breedObjects){
+    public BreedsListAdapter(Context context, List<BreedObject> breedObjects){
         layoutInflater = LayoutInflater.from(context);
         this.breedObjects = breedObjects;
     }
 
     @NonNull
-    public MyHolder onCreateViewHolder (ViewGroup parent, int viewType){
-        View view = layoutInflater.inflate(R.layout.grid_sample, parent, false);
-        return new MyHolder(view, onItemClickListener);
+    public BreedsListHolder onCreateViewHolder (ViewGroup parent, int viewType){
+        View view = layoutInflater.inflate(R.layout.breeds_grid_item, parent, false);
+        return new BreedsListHolder(view, onItemClickListener);
     }
 
-    public void onBindViewHolder(@NonNull MyHolder holder, int position){
+    public void onBindViewHolder(@NonNull BreedsListHolder holder, int position){
         //int position - индекс элемента
         //получить данные по позиции
         //вызвать для холдера метод bindTo и передать ему данные, которые были получены
