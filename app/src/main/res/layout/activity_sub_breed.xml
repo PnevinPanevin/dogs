@@ -4,15 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity_sub_breeds.SubBreedsActivity">
+    tools:context=".activity_sub_breeds_list.SubBreedsActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/sub_breed_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layoutManager="android.support.v7.widget.GridLayoutManager"
-
-        tools:listitem="@layout/breeds_grid_item">
+        tools:listitem="@layout/sub_breeds_grid_item">
 
 
     </android.support.v7.widget.RecyclerView>

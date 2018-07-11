@@ -1,12 +1,6 @@
-package com.sharipov.dogs.ResponseStructures;
-
-import android.database.Observable;
-
-import com.sharipov.dogs.ResponseStructures.Breeds;
-import com.sharipov.dogs.ResponseStructures.RandomImage;
+package com.sharipov.dogs.response_structures;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
@@ -27,4 +21,10 @@ public interface Api {
 
     @GET("breed/{breed}/list")
     Call<SubBreeds> getSubBreedsList(@Path("breed") String breed);
+
+    @GET("breed/{breed}/images")
+    Call<ImageList> getBreedImageList(@Path("breed") String breed);
+
+    @GET("breed/{breed}/{subBreed}/images")
+    Call<ImageList> getSubBreedImageList(@Path("breed") String breed, @Path("subBreed") String subBreed);
 }

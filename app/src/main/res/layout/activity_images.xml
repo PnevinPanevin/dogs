@@ -1,25 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activity_breeds_list.MainActivity"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="@string/hello_blank_fragment"/>
+    tools:context=".activity_sub_breeds_grid_images.ImageActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/breeds_recycler_view"
+        android:id="@+id/image_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/breeds_grid_item"
         app:layoutManager="android.support.v7.widget.GridLayoutManager"
-        tools:src="@tools:sample/avatars">
+        tools:listitem="@layout/image_item">
 
     </android.support.v7.widget.RecyclerView>
 

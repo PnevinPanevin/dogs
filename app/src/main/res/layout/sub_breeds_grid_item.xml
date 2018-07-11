@@ -1,29 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="215dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
     android:layout_margin="3dp"
-    app:cardCornerRadius="1dp"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/grid_sample_image_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:scaleType="centerCrop"
-        tools:src="@tools:sample/backgrounds/scenic"/>
+        tools:src="@tools:sample/backgrounds/scenic" />
 
     <TextView
         android:id="@+id/grid_sample_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="#99000000"
-        android:padding="6dp"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:textColor="@android:color/black"
         tools:text="Название породы" />
 
-</android.support.v7.widget.CardView>
+</LinearLayout>

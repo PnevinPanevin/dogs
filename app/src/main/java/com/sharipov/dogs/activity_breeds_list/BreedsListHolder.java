@@ -5,13 +5,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sharipov.dogs.Data.BreedObject;
+import com.sharipov.dogs.data.BreedObject;
 import com.sharipov.dogs.R;
 import com.squareup.picasso.Picasso;
 
-
 public class BreedsListHolder extends RecyclerView.ViewHolder {
-    //объявляем виджеты в виде полей класса
 
     private BreedsListAdapter.OnItemClickListener onItemClickListener;
     private TextView textView;
@@ -20,15 +18,13 @@ public class BreedsListHolder extends RecyclerView.ViewHolder {
     public BreedsListHolder(View itemView, BreedsListAdapter.OnItemClickListener onItemClickListener) {
         super(itemView);
 
-        //findViewById из itemView извлечь виджеты
         this.onItemClickListener = onItemClickListener;
         textView = itemView.findViewById(R.id.grid_sample_text_view);
         imageView = itemView.findViewById(R.id.grid_sample_image_view);
     }
 
     public void bindTo(BreedObject breedObject) {
-        //заполнение виджетов из объекта
-        textView.setText(breedObject.getBreed());
+        textView.setText(breedObject.getTitle());
         Picasso.get().load(breedObject.getImageUri()).into(imageView);
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

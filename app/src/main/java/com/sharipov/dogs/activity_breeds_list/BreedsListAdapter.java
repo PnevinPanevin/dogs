@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sharipov.dogs.Data.BreedObject;
+import com.sharipov.dogs.data.BreedObject;
 import com.sharipov.dogs.R;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
 public class BreedsListAdapter extends RecyclerView.Adapter<BreedsListHolder>{
 
     private LayoutInflater layoutInflater;
-    private List<BreedObject> breedObjects; //любой вид коллекции
+    private List<BreedObject> breedObjects;
     private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener{
@@ -38,13 +38,10 @@ public class BreedsListAdapter extends RecyclerView.Adapter<BreedsListHolder>{
     }
 
     public void onBindViewHolder(@NonNull BreedsListHolder holder, int position){
-        //int position - индекс элемента
-        //получить данные по позиции
-        //вызвать для холдера метод bindTo и передать ему данные, которые были получены
         holder.bindTo(breedObjects.get(position));
     }
 
     public int getItemCount(){
-        return breedObjects.size(); //возвращает размер списка данных
+        return breedObjects.size();
     }
 }

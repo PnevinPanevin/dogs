@@ -1,4 +1,4 @@
-package com.sharipov.dogs.activity_sub_breeds;
+package com.sharipov.dogs.activity_sub_breeds_list;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +11,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.sharipov.dogs.R;
-import com.sharipov.dogs.Data.SubBreedObject;
-import com.sharipov.dogs.Data.SubBreedsDataProvider;
+import com.sharipov.dogs.activity_sub_breeds_grid_images.ImageActivity;
+import com.sharipov.dogs.data.SubBreedObject;
+import com.sharipov.dogs.data.SubBreedsDataProvider;
 
 import java.util.List;
 
@@ -22,13 +23,16 @@ public class SubBreedsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SubBreedsAdapter subBreedsAdapter;
     private static final String BREED = "Breed";
+    private static final String TITLE = "Title";
     private String breed;
+    private String title;
     private List<SubBreedObject> subBreedObjectList;
     private int spanCount;
 
-    public static void start(Context context, String breed) {
+    public static void start(Context context, String breed, String title) {
         Intent starter = new Intent(context, SubBreedsActivity.class);
         starter.putExtra(BREED, breed);
+        starter.putExtra(TITLE,title);
         context.startActivity(starter);
     }
 
@@ -39,6 +43,8 @@ public class SubBreedsActivity extends AppCompatActivity {
 
         spanCount = getSpanCount();
         breed = getIntent().getStringExtra(BREED);
+        title = getIntent().getStringExtra(TITLE);
+        setTitle(title);
         Log.d(TAG, "onCreate: " + breed);
 
         SubBreedsDataProvider dataProvider = new SubBreedsDataProvider(breed);
@@ -61,8 +67,9 @@ public class SubBreedsActivity extends AppCompatActivity {
         subBreedsAdapter = new SubBreedsAdapter(this, subBreedObjectList);
         subBreedsAdapter.setOnItemClickListener(new SubBreedsAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int position) {
-
+            public void onItemClick(SubBreedObject subBreedObject) {
+                Log.d(TAG, "onItemClick: " + breed + " " + subBreedObject.getSubBreed());
+                ImageActivity.start(SubBreedsActivity.this, breed, subBreedObject.getSubBreed());
             }
         });
         recyclerView.setAdapter(subBreedsAdapter);
@@ -70,10 +77,10 @@ public class SubBreedsActivity extends AppCompatActivity {
     }
 
     private int getSpanCount(){
-        int spanCount = 1;
+        int spanCount = 2;
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
         {
-            spanCount = 2;
+            spanCount = 3;
         }
         return spanCount;
     }

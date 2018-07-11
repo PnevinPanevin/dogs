@@ -1,4 +1,4 @@
-package com.sharipov.dogs.ResponseStructures;
+package com.sharipov.dogs.response_structures;
 
 import java.util.ArrayList;
 import java.util.List;

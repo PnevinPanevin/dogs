@@ -1,16 +1,22 @@
-package com.sharipov.dogs.Data;
+package com.sharipov.dogs.data;
 
 import java.util.List;
 
 public class BreedObject {
+    private String title;
     private String breed;
     private List<String> subBreeds;
     private String imageUri;
 
-    public BreedObject(String breed, List<String> subBreeds, String imageUri){
+    public BreedObject(String title, String breed, List<String> subBreeds, String imageUri){
+        this.title = title;
         this.breed = breed;
         this.subBreeds = subBreeds;
         this.imageUri = imageUri;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public String getBreed() {
@@ -23,9 +29,5 @@ public class BreedObject {
 
     public List<String> getSubBreeds() {
         return subBreeds;
-    }
-
-    public void setImageUri(String imageUri) {
-        this.imageUri = imageUri;
     }
 }

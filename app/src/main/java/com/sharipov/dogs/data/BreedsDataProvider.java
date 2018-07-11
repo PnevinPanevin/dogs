@@ -1,12 +1,12 @@
-package com.sharipov.dogs.Data;
+package com.sharipov.dogs.data;
 
 import android.util.Log;
 
-import com.sharipov.dogs.ResponseStructures.Api;
-import com.sharipov.dogs.ResponseStructures.Breeds;
-import com.sharipov.dogs.ResponseStructures.RandomImage;
+import com.sharipov.dogs.response_structures.Api;
+import com.sharipov.dogs.response_structures.Breeds;
+import com.sharipov.dogs.response_structures.RandomImage;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -40,10 +40,8 @@ public class BreedsDataProvider {
     }
 
     public BreedsDataProvider() {
-        api = ApiInstance
-                .getInstance()
-                .getApi();
-        breedObjectList = new LinkedList<>();
+        api = ApiInstance.getApi();
+        breedObjectList = new ArrayList<>();
     }
 
     private void getBreedsTreeMap(OnGetBreedsListener onGetBreedsListener) {
@@ -89,7 +87,7 @@ public class BreedsDataProvider {
                     getImageUri(breed, new OnGetImageListener() {
                         @Override
                         public void onSuccess(String imageUri) {
-                            breedObjectList.add(new BreedObject(breed, subBreedList, imageUri));
+                            breedObjectList.add(new BreedObject(firstCharToUpperCase(breed), breed, subBreedList, imageUri));
                             if (breedObjectList.size() == breedsTreemap.size()) {
                                 onGetListListener.onSuccess(breedObjectList);
                             }
@@ -110,5 +108,15 @@ public class BreedsDataProvider {
                 Log.d(TAG, "onFail: " + t);
             }
         });
+    }
+
+    private String firstCharToUpperCase(String s) {
+        char[] sCharArray = s.toCharArray();
+        sCharArray[0] = Character.toUpperCase(sCharArray[0]);
+        return new String(sCharArray);
+    }
+
+    public int getBreedObjectListSize() {
+        return breedObjectList.size();
     }
 }

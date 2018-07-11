@@ -1,4 +1,4 @@
-package com.sharipov.dogs.ResponseStructures;
+package com.sharipov.dogs.response_structures;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

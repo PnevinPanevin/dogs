@@ -1,10 +1,10 @@
-package com.sharipov.dogs.Data;
+package com.sharipov.dogs.data;
 
 import android.util.Log;
 
-import com.sharipov.dogs.ResponseStructures.Api;
-import com.sharipov.dogs.ResponseStructures.RandomImage;
-import com.sharipov.dogs.ResponseStructures.SubBreeds;
+import com.sharipov.dogs.response_structures.Api;
+import com.sharipov.dogs.response_structures.RandomImage;
+import com.sharipov.dogs.response_structures.SubBreeds;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,8 +18,7 @@ public class SubBreedsDataProvider {
     private static final String TAG = "qqq";
     private String breed;
     private Api api;
-    List<SubBreedObject> subBreedsList;
-    Call<SubBreeds> call;
+    private List<SubBreedObject> subBreedsList;
 
     public interface OnGetImageListener {
         void onSuccess(String imageUri);
@@ -41,14 +40,12 @@ public class SubBreedsDataProvider {
 
     public SubBreedsDataProvider(String breed) {
         this.breed = breed;
-        api = ApiInstance
-                .getInstance()
-                .getApi();
+        api = ApiInstance.getApi();
         subBreedsList = new LinkedList<>();
     }
 
     private void getMessage(OnGetMessageListener onGetMessageListener) {
-        call = api.getSubBreedsList(breed);
+        Call<SubBreeds> call = api.getSubBreedsList(breed);
         call.enqueue(new Callback<SubBreeds>() {
             @Override
             public void onResponse(Call<SubBreeds> call, Response<SubBreeds> response) {
@@ -66,12 +63,11 @@ public class SubBreedsDataProvider {
         getMessage(new OnGetMessageListener() {
             @Override
             public void onSuccess(List<String> message) {
-                Log.d(TAG, "onSuccess: " + message.toString());
                 for (String s : message) {
                     getImageUri(breed, s, new OnGetImageListener() {
                         @Override
                         public void onSuccess(String imageUri) {
-                            subBreedsList.add(new SubBreedObject(s, imageUri));
+                            subBreedsList.add(new SubBreedObject(getTitle(s), s, imageUri));
                             Log.d(TAG, "onSuccess: " + subBreedsList.size() + ")" + breed + " " + imageUri);
                             if (subBreedsList.size() == message.size()) {
                                 onGetListListener.onSuccess(subBreedsList);
@@ -108,5 +104,11 @@ public class SubBreedsDataProvider {
                 Log.d(TAG, "onFailure: " + t);
             }
         });
+    }
+
+    private String getTitle(String s){
+        char[] sCharArray = s.toCharArray();
+        sCharArray[0] = Character.toUpperCase(sCharArray[0]);
+        return new String(sCharArray);
     }
 }

@@ -1,6 +1,6 @@
-package com.sharipov.dogs.Data;
+package com.sharipov.dogs.data;
 
-import com.sharipov.dogs.ResponseStructures.Api;
+import com.sharipov.dogs.response_structures.Api;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -16,11 +16,8 @@ public class ApiInstance {
                 .build().create(Api.class);
 
     }
-    public static ApiInstance getInstance() {
-        return ourInstance;
-    }
 
-    public Api getApi() {
+    public static Api getApi() {
         return api;
     }
 }
