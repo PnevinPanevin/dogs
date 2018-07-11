@@ -33,20 +33,17 @@ public class ImageDataProvider {
 
     public void getImageList(OnGetList onGetList){
         Call<ImageList> call;
-        if (subBreed.equals("")) {
+        if (subBreed.equals("")||subBreed.equals(breed)) {
             call = api.getBreedImageList(breed);
         } else {
             call = api.getSubBreedImageList(breed, subBreed);
         }
-        Log.d(TAG, "getImageList: breed == "+ breed + ", subBreed == " + subBreed);
         call.enqueue(new Callback<ImageList>() {
             @Override
             public void onResponse(Call<ImageList> call, Response<ImageList> response) {
                 ImageList imageList = response.body();
-                Log.d(TAG, "onResponse: imageList == null" + " " + String.valueOf(imageList==null));
                 imageUriList = imageList.getMessage();
                 onGetList.onSuccess(imageUriList);
-                Log.d(TAG, "onResponse: imageList.size() == " + imageUriList.size());
             }
 
             @Override

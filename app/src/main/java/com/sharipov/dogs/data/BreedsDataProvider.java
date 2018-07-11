@@ -116,7 +116,4 @@ public class BreedsDataProvider {
         return new String(sCharArray);
     }
 
-    public int getBreedObjectListSize() {
-        return breedObjectList.size();
-    }
 }

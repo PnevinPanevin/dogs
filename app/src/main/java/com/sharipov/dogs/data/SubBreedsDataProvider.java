@@ -63,8 +63,11 @@ public class SubBreedsDataProvider {
         getMessage(new OnGetMessageListener() {
             @Override
             public void onSuccess(List<String> message) {
+                if (message.size() == 1) {
+                    message.add(breed);
+                }
                 for (String s : message) {
-                    getImageUri(breed, s, new OnGetImageListener() {
+                    if (breed.equals(s)) getImageUri(breed, new OnGetImageListener() {
                         @Override
                         public void onSuccess(String imageUri) {
                             subBreedsList.add(new SubBreedObject(getTitle(s), s, imageUri));
@@ -76,9 +79,25 @@ public class SubBreedsDataProvider {
 
                         @Override
                         public void onFail(Throwable t) {
-                            Log.d(TAG, "onFail: " + t.toString());
+
                         }
                     });
+                    else
+                        getImageUri(breed, s, new OnGetImageListener() {
+                            @Override
+                            public void onSuccess(String imageUri) {
+                                subBreedsList.add(new SubBreedObject(getTitle(s), s, imageUri));
+                                Log.d(TAG, "onSuccess: " + subBreedsList.size() + ")" + breed + " " + imageUri);
+                                if (subBreedsList.size() == message.size()) {
+                                    onGetListListener.onSuccess(subBreedsList);
+                                }
+                            }
+
+                            @Override
+                            public void onFail(Throwable t) {
+                                Log.d(TAG, "onFail: " + t.toString());
+                            }
+                        });
                 }
             }
 
@@ -106,7 +125,24 @@ public class SubBreedsDataProvider {
         });
     }
 
-    private String getTitle(String s){
+    private void getImageUri(String breed, SubBreedsDataProvider.OnGetImageListener onGetImageListener) {
+        Call<RandomImage> callBreeds = api.getBreedImage(breed);
+        callBreeds.enqueue(new Callback<RandomImage>() {
+            @Override
+            public void onResponse(Call<RandomImage> call, Response<RandomImage> response) {
+                RandomImage randomImage = response.body();
+                onGetImageListener.onSuccess(randomImage.getMessage());
+            }
+
+            @Override
+            public void onFailure(Call<RandomImage> call, Throwable t) {
+                onGetImageListener.onFail(t);
+                Log.d(TAG, "onFailure: " + t);
+            }
+        });
+    }
+
+    private String getTitle(String s) {
         char[] sCharArray = s.toCharArray();
         sCharArray[0] = Character.toUpperCase(sCharArray[0]);
         return new String(sCharArray);
