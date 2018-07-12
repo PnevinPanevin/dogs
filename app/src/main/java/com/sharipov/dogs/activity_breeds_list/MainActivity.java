@@ -2,7 +2,6 @@ package com.sharipov.dogs.activity_breeds_list;
 
 import android.content.res.Configuration;
 import android.os.Handler;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -29,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "qqq";
 
-    private Toolbar toolbar;
     private RecyclerView recyclerView;
     private MenuItem searchMenuItem;
     private SearchView mSearchView;
@@ -38,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private BreedsListAdapter breedsListAdapter;
 
     private List<BreedObject> breedObjects = new LinkedList<>();
-    private int spanCount;
     private Handler handler;
 
     @Override
@@ -46,17 +43,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        recyclerView = findViewById(R.id.breeds_recycler_view);
         Toolbar mActionBarToolbar = findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(mActionBarToolbar);
 
-        spanCount = getSpanCount();
         BreedsDataProvider breedsDataProvider = new BreedsDataProvider();
         breedsDataProvider.getBreedObjectList(new BreedsDataProvider.OnGetListListener() {
             @Override
             public void onSuccess(List<BreedObject> breedList) {
                 breedObjects = breedList;
-                initBreedsListAdapter(breedObjects);
-                initRecyclerView(spanCount);
+                initRecyclerView(getSpanCount(), breedObjects);
             }
 
             @Override
@@ -66,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         });
         showLoadingProgress();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main_menu, menu);
@@ -82,22 +79,17 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                initRecyclerView(getSpanCount(), getFilteredList(newText));
                 Log.d(TAG, "onQueryTextChange: " + newText);
                 return false;
             }
         });
-
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void initRecyclerView(int spanCount) {
-        recyclerView = findViewById(R.id.breeds_recycler_view);
-        recyclerView.setAdapter(breedsListAdapter);
+    private void initRecyclerView(int spanCount, List<BreedObject> list) {
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), spanCount));
-    }
-
-    private void initBreedsListAdapter(List<BreedObject> breedObjects) {
-        breedsListAdapter = new BreedsListAdapter(getApplicationContext(), breedObjects);
+        breedsListAdapter = new BreedsListAdapter(getApplicationContext(), list);
         breedsListAdapter.setOnItemClickListener(new BreedsListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BreedObject breedObject) {
@@ -113,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        recyclerView.setAdapter(breedsListAdapter);
     }
 
     private int getSpanCount() {
@@ -133,15 +126,13 @@ public class MainActivity extends AppCompatActivity {
         return searchResultList;
     }
 
-    private void showLoadingProgress(){
+    private void showLoadingProgress() {
         progressBar = findViewById(R.id.progress_bar);
         handler = new Handler();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (breedObjects.size() == 0){
-
-                }
+                while (breedObjects.size() == 0) {}
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -150,5 +141,15 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }).start();
+    }
+
+    private List<BreedObject> getFilteredList(String query) {
+        List<BreedObject> newList = new ArrayList<>();
+        for (BreedObject b : breedObjects) {
+            if (b.getBreed().contains(query)) {
+                newList.add(b);
+            }
+        }
+        return newList;
     }
 }
