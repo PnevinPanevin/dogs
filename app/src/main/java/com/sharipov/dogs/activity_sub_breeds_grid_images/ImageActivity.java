@@ -2,16 +2,17 @@ package com.sharipov.dogs.activity_sub_breeds_grid_images;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.widget.ProgressBar;
 
 import com.sharipov.dogs.R;
 import com.sharipov.dogs.data.ImageDataProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImageActivity extends AppCompatActivity {
@@ -21,10 +22,11 @@ public class ImageActivity extends AppCompatActivity {
     public static final String SUBBREED = "SUBBREED";
     private String breed;
     private String subBreed;
-    private List<String> imageList;
+    private List<String> imageList = new ArrayList<>();
 
-    private RecyclerView recyclerView;
-    private ImageAdapter imageAdapter;
+    private ProgressBar progressBar;
+    private ViewPager viewPager;
+    private ImagePagerAdapter pagerAdapter;
 
     public static void start(Context context, String breed, String subBreed) {
         Intent starter = new Intent(context, ImageActivity.class);
@@ -41,7 +43,7 @@ public class ImageActivity extends AppCompatActivity {
         breed = getIntent().getStringExtra(BREED);
         subBreed = getIntent().getStringExtra(SUBBREED);
 
-        recyclerView = findViewById(R.id.image_recycler_view);
+        viewPager = findViewById(R.id.view_pager);
 
         ImageDataProvider imageDataProvider = new ImageDataProvider(breed, subBreed);
         imageDataProvider.getImageList(new ImageDataProvider.OnGetList() {
@@ -49,15 +51,8 @@ public class ImageActivity extends AppCompatActivity {
             public void onSuccess(List<String> list) {
                 imageList = list;
 
-                imageAdapter = new ImageAdapter(ImageActivity.this, imageList);
-                imageAdapter.setOnItemClickListener(new ImageAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(String imageUri) {
-
-                    }
-                });
-                recyclerView.setAdapter(imageAdapter);
-                recyclerView.setLayoutManager(new GridLayoutManager(ImageActivity.this, 1));
+                pagerAdapter = new ImagePagerAdapter(ImageActivity.this, imageList);
+                viewPager.setAdapter(pagerAdapter);
             }
 
             @Override
@@ -65,6 +60,23 @@ public class ImageActivity extends AppCompatActivity {
 
             }
         });
+        showLoadingProgress();
+    }
 
+    private void showLoadingProgress() {
+        progressBar = findViewById(R.id.progress_bar);
+        Handler handler = new Handler();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (imageList.size() == 0) {}
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisibility(ProgressBar.GONE);
+                    }
+                });
+            }
+        }).start();
     }
 }

@@ -30,19 +30,19 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private MenuItem searchMenuItem;
-    private SearchView mSearchView;
+    private SearchView searchView;
     private ProgressBar progressBar;
 
     private BreedsListAdapter breedsListAdapter;
 
     private List<BreedObject> breedObjects = new LinkedList<>();
-    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        progressBar = findViewById(R.id.progress_bar);
         recyclerView = findViewById(R.id.breeds_recycler_view);
         Toolbar mActionBarToolbar = findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(mActionBarToolbar);
@@ -67,10 +67,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main_menu, menu);
         searchMenuItem = menu.findItem(R.id.action_search);
-        mSearchView = (SearchView) searchMenuItem.getActionView();
-        mSearchView.setQueryHint(getString(R.string.search_hint));
-        mSearchView.setIconifiedByDefault(true);
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView = (SearchView) searchMenuItem.getActionView();
+        searchView.setQueryHint(getString(R.string.search_hint));
+        searchView.setIconifiedByDefault(true);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d(TAG, "onQueryTextSubmit: " + query);
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                initRecyclerView(getSpanCount(), getFilteredList(newText));
+                initRecyclerView(getSpanCount(), BreedsDataProvider.getFilteredList(newText, breedObjects));
                 Log.d(TAG, "onQueryTextChange: " + newText);
                 return false;
             }
@@ -116,19 +116,9 @@ public class MainActivity extends AppCompatActivity {
         return spanCount;
     }
 
-    private List<BreedObject> getSearchResultList(String s) {
-        List<BreedObject> searchResultList = new ArrayList<>();
-        for (BreedObject b : breedObjects) {
-            if (b.getBreed().contains(s)) {
-                searchResultList.add(b);
-            }
-        }
-        return searchResultList;
-    }
-
     private void showLoadingProgress() {
         progressBar = findViewById(R.id.progress_bar);
-        handler = new Handler();
+        Handler handler = new Handler();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -143,13 +133,4 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
-    private List<BreedObject> getFilteredList(String query) {
-        List<BreedObject> newList = new ArrayList<>();
-        for (BreedObject b : breedObjects) {
-            if (b.getBreed().contains(query)) {
-                newList.add(b);
-            }
-        }
-        return newList;
-    }
 }

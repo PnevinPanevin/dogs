@@ -1,5 +1,6 @@
 package com.sharipov.dogs.activity_breeds_list;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;

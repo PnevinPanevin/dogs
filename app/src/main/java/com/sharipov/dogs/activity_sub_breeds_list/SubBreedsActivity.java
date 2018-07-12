@@ -3,11 +3,13 @@ package com.sharipov.dogs.activity_sub_breeds_list;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.sharipov.dogs.R;
@@ -15,19 +17,22 @@ import com.sharipov.dogs.activity_sub_breeds_grid_images.ImageActivity;
 import com.sharipov.dogs.data.SubBreedObject;
 import com.sharipov.dogs.data.SubBreedsDataProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SubBreedsActivity extends AppCompatActivity {
 
     private static final String TAG = "qqq";
-    private RecyclerView recyclerView;
-    private SubBreedsAdapter subBreedsAdapter;
     private static final String BREED = "Breed";
     private static final String TITLE = "Title";
+
     private String breed;
     private String title;
-    private List<SubBreedObject> subBreedObjectList;
-    private int spanCount;
+    private List<SubBreedObject> subBreedObjectList = new ArrayList<>();
+
+    private RecyclerView recyclerView;
+    private SubBreedsAdapter subBreedsAdapter;
+    private ProgressBar progressBar;
 
     public static void start(Context context, String breed, String title) {
         Intent starter = new Intent(context, SubBreedsActivity.class);
@@ -41,7 +46,6 @@ public class SubBreedsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub_breed);
 
-        spanCount = getSpanCount();
         breed = getIntent().getStringExtra(BREED);
         title = getIntent().getStringExtra(TITLE);
         setTitle(title);
@@ -60,6 +64,7 @@ public class SubBreedsActivity extends AppCompatActivity {
                 Toast.makeText(SubBreedsActivity.this,t.toString(),Toast.LENGTH_SHORT).show();
             }
         });
+        showLoadingProgress();
     }
 
     private void initRecyclerView() {
@@ -73,7 +78,7 @@ public class SubBreedsActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(subBreedsAdapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), spanCount));
+        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), getSpanCount()));
     }
 
     private int getSpanCount(){
@@ -83,5 +88,22 @@ public class SubBreedsActivity extends AppCompatActivity {
             spanCount = 3;
         }
         return spanCount;
+    }
+
+    private void showLoadingProgress() {
+        progressBar = findViewById(R.id.progress_bar);
+        Handler handler = new Handler();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (subBreedObjectList.size() == 0) {}
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisibility(ProgressBar.GONE);
+                    }
+                });
+            }
+        }).start();
     }
 }

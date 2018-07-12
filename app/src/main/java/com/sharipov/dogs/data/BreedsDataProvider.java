@@ -116,4 +116,13 @@ public class BreedsDataProvider {
         return new String(sCharArray);
     }
 
+    public static List<BreedObject> getFilteredList(String query, List<BreedObject> breedObjects) {
+        List<BreedObject> newList = new ArrayList<>();
+        for (BreedObject b : breedObjects) {
+            if (b.getBreed().contains(query)) {
+                newList.add(b);
+            }
+        }
+        return newList;
+    }
 }

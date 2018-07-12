@@ -6,6 +6,7 @@ import com.sharipov.dogs.response_structures.Api;
 import com.sharipov.dogs.response_structures.RandomImage;
 import com.sharipov.dogs.response_structures.SubBreeds;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
