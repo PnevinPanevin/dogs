@@ -8,13 +8,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.sharipov.dogs.activity_sub_breeds_grid_images.ImageActivity;
+import com.sharipov.dogs.activity_images.ImageActivity;
 import com.sharipov.dogs.data.BreedObject;
 import com.sharipov.dogs.data.BreedsDataProvider;
 import com.sharipov.dogs.R;
@@ -26,8 +25,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "qqq";
-
     private RecyclerView recyclerView;
     private MenuItem searchMenuItem;
     private SearchView searchView;
@@ -35,31 +32,15 @@ public class MainActivity extends AppCompatActivity {
 
     private BreedsListAdapter breedsListAdapter;
 
-    private List<BreedObject> breedObjects = new LinkedList<>();
+    private List<BreedObject> breedObjects = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        progressBar = findViewById(R.id.progress_bar);
-        recyclerView = findViewById(R.id.breeds_recycler_view);
-        Toolbar mActionBarToolbar = findViewById(R.id.toolbar_actionbar);
-        setSupportActionBar(mActionBarToolbar);
-
-        BreedsDataProvider breedsDataProvider = new BreedsDataProvider();
-        breedsDataProvider.getBreedObjectList(new BreedsDataProvider.OnGetListListener() {
-            @Override
-            public void onSuccess(List<BreedObject> breedList) {
-                breedObjects = breedList;
-                initRecyclerView(getSpanCount(), breedObjects);
-            }
-
-            @Override
-            public void onFail(Throwable t) {
-                Toast.makeText(MainActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        initToolbar();
+        getDataFromProvider();
         showLoadingProgress();
     }
 
@@ -73,21 +54,41 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.d(TAG, "onQueryTextSubmit: " + query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                initRecyclerView(getSpanCount(), BreedsDataProvider.getFilteredList(newText, breedObjects));
-                Log.d(TAG, "onQueryTextChange: " + newText);
+                initRecyclerView(getSpanCount(), BreedsDataProvider.getFilteredList(newText.toLowerCase(), breedObjects));
                 return false;
             }
         });
         return super.onCreateOptionsMenu(menu);
     }
 
+    private void getDataFromProvider() {
+        BreedsDataProvider breedsDataProvider = new BreedsDataProvider();
+        breedsDataProvider.getBreedObjectList(new BreedsDataProvider.OnGetListListener() {
+            @Override
+            public void onSuccess(List<BreedObject> breedList) {
+                breedObjects = breedList;
+                initRecyclerView(getSpanCount(), breedObjects);
+            }
+
+            @Override
+            public void onFail(Throwable t) {
+                Toast.makeText(MainActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar_actionbar);
+        setSupportActionBar(toolbar);
+    }
+
     private void initRecyclerView(int spanCount, List<BreedObject> list) {
+        recyclerView = findViewById(R.id.breeds_recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), spanCount));
         breedsListAdapter = new BreedsListAdapter(getApplicationContext(), list);
         breedsListAdapter.setOnItemClickListener(new BreedsListAdapter.OnItemClickListener() {
@@ -99,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
                     String subBreed = "";
                     if (breedObject.getSubBreeds().size() == 1) {
                         subBreed = breedObject.getSubBreeds().get(0);
-                        Log.d(TAG, "onItemClick: " + breedObject.getBreed() + " " + subBreed);
                     }
                     ImageActivity.start(MainActivity.this, breedObject.getBreed(), subBreed);
                 }
@@ -122,7 +122,8 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (breedObjects.size() == 0) {}
+                while (breedObjects.size() == 0) {
+                }
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -132,5 +133,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
     }
-
 }

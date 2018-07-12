@@ -8,12 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.sharipov.dogs.R;
-import com.sharipov.dogs.activity_sub_breeds_grid_images.ImageActivity;
+import com.sharipov.dogs.activity_images.ImageActivity;
 import com.sharipov.dogs.data.SubBreedObject;
 import com.sharipov.dogs.data.SubBreedsDataProvider;
 
@@ -30,6 +31,7 @@ public class SubBreedsActivity extends AppCompatActivity {
     private String title;
     private List<SubBreedObject> subBreedObjectList = new ArrayList<>();
 
+    private Toolbar toolbar;
     private RecyclerView recyclerView;
     private SubBreedsAdapter subBreedsAdapter;
     private ProgressBar progressBar;
@@ -42,9 +44,20 @@ public class SubBreedsActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub_breed);
+
+        Toolbar toolbar = findViewById(R.id.toolbar_actionbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         breed = getIntent().getStringExtra(BREED);
         title = getIntent().getStringExtra(TITLE);

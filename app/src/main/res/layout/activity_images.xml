@@ -4,19 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity_sub_breeds_grid_images.ImageActivity">
+    tools:context=".activity_images.ImageActivity">
 
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"/>
+        android:layout_gravity="center_vertical" />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/view_pager"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </android.support.v4.view.ViewPager>
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
+        <include layout="@layout/toolbar" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v4.view.ViewPager>
+
+    </LinearLayout>
 
 </FrameLayout>

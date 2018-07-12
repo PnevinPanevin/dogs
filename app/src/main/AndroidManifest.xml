@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity_sub_breeds_list.SubBreedsActivity" />
-        <activity android:name=".activity_sub_breeds_grid_images.ImageActivity" />
+        <activity android:name=".activity_images.ImageActivity" />
         <activity android:name=".activity_sub_breeds_pager.SubBreedPagerActivity"></activity>
     </application>
 

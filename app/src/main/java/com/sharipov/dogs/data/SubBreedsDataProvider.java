@@ -68,22 +68,23 @@ public class SubBreedsDataProvider {
                     message.add(breed);
                 }
                 for (String s : message) {
-                    if (breed.equals(s)) getImageUri(breed, new OnGetImageListener() {
-                        @Override
-                        public void onSuccess(String imageUri) {
-                            subBreedsList.add(new SubBreedObject(getTitle(s), s, imageUri));
-                            Log.d(TAG, "onSuccess: " + subBreedsList.size() + ")" + breed + " " + imageUri);
-                            if (subBreedsList.size() == message.size()) {
-                                onGetListListener.onSuccess(subBreedsList);
+                    if (breed.equals(s)) {
+                        getImageUri(breed, new OnGetImageListener() {
+                            @Override
+                            public void onSuccess(String imageUri) {
+                                subBreedsList.add(new SubBreedObject(getTitle(s), s, imageUri));
+                                Log.d(TAG, "onSuccess: " + subBreedsList.size() + ")" + breed + " " + imageUri);
+                                if (subBreedsList.size() == message.size()) {
+                                    onGetListListener.onSuccess(subBreedsList);
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFail(Throwable t) {
+                            @Override
+                            public void onFail(Throwable t) {
 
-                        }
-                    });
-                    else
+                            }
+                        });
+                    } else {
                         getImageUri(breed, s, new OnGetImageListener() {
                             @Override
                             public void onSuccess(String imageUri) {
@@ -99,6 +100,7 @@ public class SubBreedsDataProvider {
                                 Log.d(TAG, "onFail: " + t.toString());
                             }
                         });
+                    }
                 }
             }
 
