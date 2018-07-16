@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,23 +14,24 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical" />
 
-    <LinearLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <include layout="@layout/toolbar" />
+        <include layout="@layout/toolbar"></include>
+
+    </android.support.design.widget.AppBarLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/breeds_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layoutManager="android.support.v7.widget.GridLayoutManager"
-            app:spanCount="3"
-            tools:listitem="@layout/breeds_grid_item">
-
+            tools:listitem="@layout/breeds_grid_item"
+            tools:spanCount="3">
         </android.support.v7.widget.RecyclerView>
 
-    </LinearLayout>
-
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

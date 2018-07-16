@@ -56,6 +56,7 @@ public class BreedsDataProvider {
             @Override
             public void onFailure(Call<Breeds> call, Throwable t) {
                 onGetBreedsListener.onFail(t);
+                call.cancel();
             }
         });
     }
@@ -72,6 +73,7 @@ public class BreedsDataProvider {
             @Override
             public void onFailure(Call<RandomImage> call, Throwable t) {
                 onGetImageListener.onFail(t);
+                call.cancel();
                 Log.d(TAG, "onFailure: " + t);
             }
         });

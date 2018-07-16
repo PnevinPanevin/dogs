@@ -1,5 +1,6 @@
 package com.sharipov.dogs.activity_breeds_list;
 
+import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -39,9 +40,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        progressBar = findViewById(R.id.progress_bar);
         initToolbar();
         getDataFromProvider();
-        showLoadingProgress();
     }
 
     @Override
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(List<BreedObject> breedList) {
                 breedObjects = breedList;
+                progressBar.setVisibility(ProgressBar.GONE);
                 initRecyclerView(getSpanCount(), breedObjects);
             }
 
@@ -114,23 +116,5 @@ public class MainActivity extends AppCompatActivity {
             spanCount = 4;
         }
         return spanCount;
-    }
-
-    private void showLoadingProgress() {
-        progressBar = findViewById(R.id.progress_bar);
-        Handler handler = new Handler();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (breedObjects.size() == 0) {
-                }
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.setVisibility(ProgressBar.GONE);
-                    }
-                });
-            }
-        }).start();
     }
 }

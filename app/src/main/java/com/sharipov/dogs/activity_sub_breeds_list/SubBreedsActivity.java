@@ -31,7 +31,6 @@ public class SubBreedsActivity extends AppCompatActivity {
     private String title;
     private List<SubBreedObject> subBreedObjectList = new ArrayList<>();
 
-    private Toolbar toolbar;
     private RecyclerView recyclerView;
     private SubBreedsAdapter subBreedsAdapter;
     private ProgressBar progressBar;
@@ -63,12 +62,14 @@ public class SubBreedsActivity extends AppCompatActivity {
         title = getIntent().getStringExtra(TITLE);
         setTitle(title);
         Log.d(TAG, "onCreate: " + breed);
+        progressBar = findViewById(R.id.progress_bar);
 
         SubBreedsDataProvider dataProvider = new SubBreedsDataProvider(breed);
         dataProvider.getSubBreedsList(new SubBreedsDataProvider.OnGetListListener() {
             @Override
             public void onSuccess(List<SubBreedObject> subBreedObjectList) {
                 SubBreedsActivity.this.subBreedObjectList = subBreedObjectList;
+                progressBar.setVisibility(ProgressBar.GONE);
                 initRecyclerView();
             }
 
@@ -77,7 +78,6 @@ public class SubBreedsActivity extends AppCompatActivity {
                 Toast.makeText(SubBreedsActivity.this,t.toString(),Toast.LENGTH_SHORT).show();
             }
         });
-        showLoadingProgress();
     }
 
     private void initRecyclerView() {
@@ -101,22 +101,5 @@ public class SubBreedsActivity extends AppCompatActivity {
             spanCount = 3;
         }
         return spanCount;
-    }
-
-    private void showLoadingProgress() {
-        progressBar = findViewById(R.id.progress_bar);
-        Handler handler = new Handler();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (subBreedObjectList.size() == 0) {}
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.setVisibility(ProgressBar.GONE);
-                    }
-                });
-            }
-        }).start();
     }
 }

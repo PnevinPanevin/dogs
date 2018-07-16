@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
@@ -20,6 +21,7 @@ import java.util.List;
 
 public class ImageActivity extends AppCompatActivity {
 
+    public static final String TAG = "TAG";
     public static final String BREED = "BREED";
     public static final String SUBBREED = "SUBBREED";
     public static final String LIGHTS_TURNED_OFF = "LIGHTS_TURNED_OFF";
@@ -51,53 +53,12 @@ public class ImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_images);
 
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null){
             lightsTurnedOff = savedInstanceState.getBoolean(LIGHTS_TURNED_OFF, false);
         }
-        getStringsFromIntent();
-        initToolbar();
-        getDataFromProvider();
-        showLoadingProgress();
-        if (lightsTurnedOff) {
-            turnOffTheLights();
-        }
-    }
-
-    private void getDataFromProvider() {
-        ImageDataProvider imageDataProvider = new ImageDataProvider(breed, subBreed);
-        imageDataProvider.getImageList(new ImageDataProvider.OnGetList() {
-            @Override
-            public void onSuccess(List<String> list) {
-                imageList = list;
-                initViewPager();
-            }
-
-            @Override
-            public void onFail(Throwable t) {
-                Toast.makeText(ImageActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void getStringsFromIntent() {
         breed = getIntent().getStringExtra(BREED);
         subBreed = getIntent().getStringExtra(SUBBREED);
-    }
 
-    private void initViewPager() {
-        viewPager = findViewById(R.id.view_pager);
-        pagerAdapter = new ImagePagerAdapter(ImageActivity.this, imageList);
-        pagerAdapter.setOnItemClickListener(new ImagePagerAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick() {
-                lightsTurnedOff = !lightsTurnedOff;
-                turnOffTheLights();
-            }
-        });
-        viewPager.setAdapter(pagerAdapter);
-    }
-
-    private void initToolbar() {
         toolbar = findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -105,8 +66,37 @@ public class ImageActivity extends AppCompatActivity {
         if (breed.equals(subBreed)) {
             setTitle(breed);
         } else {
-            setTitle(breed + " " + subBreed);
+            setTitle(breed);
+            toolbar.setSubtitle(subBreed);
         }
+        viewPager = findViewById(R.id.view_pager);
+
+        ImageDataProvider imageDataProvider = new ImageDataProvider(breed, subBreed);
+        imageDataProvider.getImageList(new ImageDataProvider.OnGetList() {
+            @Override
+            public void onSuccess(List<String> list) {
+                imageList = list;
+
+                pagerAdapter = new ImagePagerAdapter(ImageActivity.this, imageList);
+                pagerAdapter.setOnItemClickListener(new ImagePagerAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick() {
+                        lightsTurnedOff = !lightsTurnedOff;
+                        turnOffTheLights();
+                    }
+                });
+                viewPager.setAdapter(pagerAdapter);
+
+            }
+
+            @Override
+            public void onFail(Throwable t) {
+                Toast.makeText(ImageActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        showLoadingProgress();
+
+        if (lightsTurnedOff)turnOffTheLights();
     }
 
     @Override
@@ -133,11 +123,11 @@ public class ImageActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void turnOffTheLights() {
+    private void turnOffTheLights(){
         Window window = this.getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        if (lightsTurnedOff) {
+        if (lightsTurnedOff){
             int color = getColor(R.color.colorBlack);
             window.setStatusBarColor(color);
             toolbar.setBackgroundColor(color);
