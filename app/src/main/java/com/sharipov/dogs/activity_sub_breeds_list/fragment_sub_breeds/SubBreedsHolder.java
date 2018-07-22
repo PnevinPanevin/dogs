@@ -1,4 +1,4 @@
-package com.sharipov.dogs.activity_sub_breeds_list;
+package com.sharipov.dogs.activity_sub_breeds_list.fragment_sub_breeds;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

@@ -150,4 +150,14 @@ public class SubBreedsDataProvider {
         sCharArray[0] = Character.toUpperCase(sCharArray[0]);
         return new String(sCharArray);
     }
+
+    public static List<SubBreedObject> getFilteredList(String query, List<SubBreedObject> list) {
+        List<SubBreedObject> newList = new ArrayList<>();
+        for (SubBreedObject b : list) {
+            if (b.getSubBreed().contains(query)) {
+                newList.add(b);
+            }
+        }
+        return newList;
+    }
 }

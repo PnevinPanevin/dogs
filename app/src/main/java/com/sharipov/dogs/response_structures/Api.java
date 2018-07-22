@@ -27,4 +27,5 @@ public interface Api {
 
     @GET("breed/{breed}/{subBreed}/images")
     Call<ImageList> getSubBreedImageList(@Path("breed") String breed, @Path("subBreed") String subBreed);
+
 }

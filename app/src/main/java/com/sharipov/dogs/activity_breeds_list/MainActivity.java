@@ -1,8 +1,6 @@
 package com.sharipov.dogs.activity_breeds_list;
 
-import android.app.ProgressDialog;
 import android.content.res.Configuration;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,13 +13,12 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.sharipov.dogs.activity_images.ImageActivity;
+import com.sharipov.dogs.activity_sub_breeds_list.SubBreedsFragmentsActivity;
 import com.sharipov.dogs.data.BreedObject;
 import com.sharipov.dogs.data.BreedsDataProvider;
 import com.sharipov.dogs.R;
-import com.sharipov.dogs.activity_sub_breeds_list.SubBreedsActivity;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main_menu, menu);
+        getMenuInflater().inflate(R.menu.search_menu, menu);
         searchMenuItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchMenuItem.getActionView();
         searchView.setQueryHint(getString(R.string.search_hint));
@@ -97,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(BreedObject breedObject) {
                 if (breedObject.getSubBreeds().size() > 0) {
-                    SubBreedsActivity.start(MainActivity.this, breedObject.getBreed(), breedObject.getTitle());
+                    //SubBreedsActivity.start(MainActivity.this, breedObject.getBreed(), breedObject.getTitle(), breedObject.getImageUri());
+                    SubBreedsFragmentsActivity.start(MainActivity.this, breedObject.getBreed(), breedObject.getTitle(), breedObject.getImageUri());
                 } else {
                     String subBreed = "";
                     if (breedObject.getSubBreeds().size() == 1) {

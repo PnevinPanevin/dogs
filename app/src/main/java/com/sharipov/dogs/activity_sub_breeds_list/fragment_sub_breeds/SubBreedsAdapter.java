@@ -1,4 +1,4 @@
-package com.sharipov.dogs.activity_sub_breeds_list;
+package com.sharipov.dogs.activity_sub_breeds_list.fragment_sub_breeds;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -15,7 +15,7 @@ import java.util.List;
 public class SubBreedsAdapter extends RecyclerView.Adapter<SubBreedsHolder> {
 
     private LayoutInflater layoutInflater;
-    private List<SubBreedObject> subBreedObjects; //любой вид коллекции
+    private List<SubBreedObject> subBreedObjects;
     private SubBreedsAdapter.OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener{
@@ -46,5 +46,11 @@ public class SubBreedsAdapter extends RecyclerView.Adapter<SubBreedsHolder> {
     @Override
     public int getItemCount() {
         return subBreedObjects.size();
+    }
+
+    public void setFilter(List<SubBreedObject> list){
+        subBreedObjects.clear();
+        subBreedObjects.addAll(list);
+        notifyDataSetChanged();
     }
 }
