@@ -7,9 +7,10 @@ import com.sharipov.dogs.response_structures.Breeds;
 import com.sharipov.dogs.response_structures.RandomImage;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,7 +23,7 @@ public class BreedsDataProvider {
     private List<BreedObject> breedObjectList;
 
     public interface OnGetBreedsListener {
-        void onSuccess(TreeMap<String, List<String>> breedsTreeMap);
+        void onSuccess(HashMap<String, List<String>> breedsTreeMap);
 
         void onFail(Throwable t);
     }
@@ -44,13 +45,12 @@ public class BreedsDataProvider {
         breedObjectList = new ArrayList<>();
     }
 
-    private void getBreedsTreeMap(OnGetBreedsListener onGetBreedsListener) {
+    private void getBreedsMap(OnGetBreedsListener onGetBreedsListener) {
         Call<Breeds> callBreeds = api.getBreeds();
         callBreeds.enqueue(new Callback<Breeds>() {
             @Override
             public void onResponse(Call<Breeds> call, Response<Breeds> response) {
-                Breeds breeds = response.body();
-                onGetBreedsListener.onSuccess(breeds.getMessage());
+                onGetBreedsListener.onSuccess(response.body().getMessage());
             }
 
             @Override
@@ -80,17 +80,18 @@ public class BreedsDataProvider {
     }
 
     public void getBreedObjectList(OnGetListListener onGetListListener) {
-        getBreedsTreeMap(new OnGetBreedsListener() {
+        getBreedsMap(new OnGetBreedsListener() {
             @Override
-            public void onSuccess(TreeMap<String, List<String>> breedsTreemap) {
-                for (Map.Entry<String, List<String>> entry : breedsTreemap.entrySet()) {
+            public void onSuccess(HashMap<String, List<String>> breedsMap) {
+                for (Map.Entry<String, List<String>> entry : breedsMap.entrySet()) {
                     String breed = entry.getKey();
                     List<String> subBreedList = entry.getValue();
                     getImageUri(breed, new OnGetImageListener() {
                         @Override
                         public void onSuccess(String imageUri) {
                             breedObjectList.add(new BreedObject(firstCharToUpperCase(breed), breed, subBreedList, imageUri));
-                            if (breedObjectList.size() == breedsTreemap.size()) {
+                            if (breedObjectList.size() == breedsMap.size()) {
+                                Collections.sort(breedObjectList, (o1, o2) -> o1.getBreed().compareTo(o2.getBreed()));
                                 onGetListListener.onSuccess(breedObjectList);
                             }
                             Log.d(TAG, "onSuccess: " + breedObjectList.size() + ")" + breed + " " + imageUri);

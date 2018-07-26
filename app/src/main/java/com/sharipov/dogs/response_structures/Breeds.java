@@ -3,8 +3,8 @@ package com.sharipov.dogs.response_structures;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.TreeMap;
 
 public class Breeds {
 
@@ -13,8 +13,7 @@ public class Breeds {
     private String status;
     @SerializedName("message")
     @Expose
-    private TreeMap<String, List<String>> message;
-    //private LinkedList<BreedObject> message;
+    private HashMap<String, List<String>> message;
 
     public String getStatus() {
         return status;
@@ -24,17 +23,12 @@ public class Breeds {
         this.status = status;
     }
 
-    public TreeMap<String, List<String>> getMessage() {
+    public HashMap<String, List<String>> getMessage() {
         return message;
     }
-//    public LinkedList<BreedObject> getMessage() {
-//        return message;
-//    }
 
-    public void setMessage(TreeMap<String, List<String>> message) {
+    public void setMessage(HashMap<String, List<String>> message) {
         this.message = message;
     }
-//        public void setMessage(LinkedList<BreedObject> message) {
-//        this.message = message;
-//    }
+
 }

@@ -7,6 +7,7 @@ import com.sharipov.dogs.response_structures.RandomImage;
 import com.sharipov.dogs.response_structures.SubBreeds;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -56,6 +57,7 @@ public class SubBreedsDataProvider {
             @Override
             public void onFailure(Call<SubBreeds> call, Throwable t) {
                 onGetMessageListener.onFail(t);
+                call.cancel();
             }
         });
     }
@@ -64,43 +66,23 @@ public class SubBreedsDataProvider {
         getMessage(new OnGetMessageListener() {
             @Override
             public void onSuccess(List<String> message) {
-                if (message.size() == 1) {
-                    message.add(breed);
-                }
                 for (String s : message) {
-                    if (breed.equals(s)) {
-                        getImageUri(breed, new OnGetImageListener() {
-                            @Override
-                            public void onSuccess(String imageUri) {
-                                subBreedsList.add(new SubBreedObject(getTitle(s), s, imageUri));
-                                Log.d(TAG, "onSuccess: " + subBreedsList.size() + ")" + breed + " " + imageUri);
-                                if (subBreedsList.size() == message.size()) {
-                                    onGetListListener.onSuccess(subBreedsList);
+                    getImageUri(breed, new OnGetImageListener() {
+                                @Override
+                                public void onSuccess(String imageUri) {
+                                    subBreedsList.add(new SubBreedObject(getTitle(s), s, imageUri));
+                                    if (subBreedsList.size() == message.size()) {
+                                        Collections.sort(subBreedsList, (o1, o2) -> o1.getSubBreed().compareTo(o2.getSubBreed()));
+                                        onGetListListener.onSuccess(subBreedsList);
+                                    }
+                                }
+
+                                @Override
+                                public void onFail(Throwable t) {
+                                    onGetListListener.onFail(t);
                                 }
                             }
-
-                            @Override
-                            public void onFail(Throwable t) {
-
-                            }
-                        });
-                    } else {
-                        getImageUri(breed, s, new OnGetImageListener() {
-                            @Override
-                            public void onSuccess(String imageUri) {
-                                subBreedsList.add(new SubBreedObject(getTitle(s), s, imageUri));
-                                Log.d(TAG, "onSuccess: " + subBreedsList.size() + ")" + breed + " " + imageUri);
-                                if (subBreedsList.size() == message.size()) {
-                                    onGetListListener.onSuccess(subBreedsList);
-                                }
-                            }
-
-                            @Override
-                            public void onFail(Throwable t) {
-                                Log.d(TAG, "onFail: " + t.toString());
-                            }
-                        });
-                    }
+                    );
                 }
             }
 

@@ -20,18 +20,11 @@
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <include layout="@layout/toolbar"></include>
+        <include layout="@layout/toolbar"/>
 
     </android.support.design.widget.AppBarLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/breeds_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layoutManager="android.support.v7.widget.GridLayoutManager"
-            tools:listitem="@layout/breeds_grid_item"
-            tools:spanCount="3">
-        </android.support.v7.widget.RecyclerView>
+    <include layout="@layout/recycler_view_grid_layout"
+        android:id="@+id/breeds_recycler_view"/>
 
 </android.support.design.widget.CoordinatorLayout>

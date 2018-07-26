@@ -90,7 +90,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.breeds_recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), spanCount));
         breedsListAdapter = new BreedsListAdapter(getApplicationContext(), list);
-        breedsListAdapter.setOnItemClickListener(new BreedsListAdapter.OnItemClickListener() {
+        breedsListAdapter.setOnItemClickListener(
+                new BreedsListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BreedObject breedObject) {
                 if (breedObject.getSubBreeds().size() > 0) {
@@ -104,7 +105,8 @@ public class MainActivity extends AppCompatActivity {
                     ImageActivity.start(MainActivity.this, breedObject.getBreed(), subBreed);
                 }
             }
-        });
+        }
+        );
         recyclerView.setAdapter(breedsListAdapter);
     }
 
