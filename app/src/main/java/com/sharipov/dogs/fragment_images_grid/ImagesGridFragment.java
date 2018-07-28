@@ -11,15 +11,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.sharipov.dogs.R;
+import com.sharipov.dogs.activity_fullscreen_image.FullscreenImageActivity;
 import com.sharipov.dogs.data.ImageDataProvider;
 
 import java.util.List;
 
-public class ImagesGridFragment extends Fragment{
+public class ImagesGridFragment extends Fragment {
 
     private static final String TAG = "qqq";
     private static final String BREED = "BREED";
@@ -33,7 +35,7 @@ public class ImagesGridFragment extends Fragment{
     private RecyclerView recyclerView;
     private ImagesGridAdapter imageAdapter;
 
-    public static Fragment newInstance(String breed, String subBreed){
+    public static Fragment newInstance(String breed, String subBreed) {
         Bundle args = new Bundle();
         args.putString(BREED, breed);
         args.putString(SUB_BREED, subBreed);
@@ -65,16 +67,17 @@ public class ImagesGridFragment extends Fragment{
                 progressBar.setVisibility(ProgressBar.GONE);
 
                 imageAdapter = new ImagesGridAdapter(getContext(), imageList);
-                imageAdapter.setOnItemClickListener((String imageUri) -> {
-
-                });
+                imageAdapter.setOnItemClickListener(
+                        (parent, imageUri) -> FullscreenImageActivity.
+                                start(getActivity(), parent.findViewById(R.id.image_view), imageUri)
+                );
                 recyclerView.setAdapter(imageAdapter);
                 recyclerView.setLayoutManager(new GridLayoutManager(getContext(), getSpanCount()));
             }
 
             @Override
             public void onFail(Throwable t) {
-                Toast.makeText(getContext(),t.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onFail: " + t.getLocalizedMessage());
             }
         });

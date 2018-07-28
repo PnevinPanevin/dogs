@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import com.sharipov.dogs.R;
 
@@ -17,7 +18,7 @@ public class ImagesGridAdapter extends RecyclerView.Adapter<ImagesGridHolder> {
     private ImagesGridAdapter.OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener{
-        void onItemClick(String imageUri);
+        void onItemClick(View parent, String imageUri);
     }
 
     public ImagesGridAdapter(Context context, List<String> imagesList) {

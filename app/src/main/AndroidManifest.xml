@@ -23,7 +23,8 @@
         <activity android:name=".activity_sub_breeds_list.SubBreedsActivity" />
         <activity android:name=".activity_images.ImageActivity" />
         <activity android:name=".activity_sub_breeds_pager.SubBreedPagerActivity" />
-        <activity android:name=".activity_sub_breeds_list.SubBreedsFragmentsActivity"></activity>
+        <activity android:name=".activity_sub_breeds_list.SubBreedsFragmentsActivity" />
+        <activity android:name=".activity_fullscreen_image.FullscreenImageActivity"></activity>
     </application>
 
 </manifest>
