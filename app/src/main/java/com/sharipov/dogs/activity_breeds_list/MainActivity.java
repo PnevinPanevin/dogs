@@ -1,6 +1,9 @@
 package com.sharipov.dogs.activity_breeds_list;
 
+import android.content.Context;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,6 +23,8 @@ import com.sharipov.dogs.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Cache;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -91,22 +96,17 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), spanCount));
         breedsListAdapter = new BreedsListAdapter(getApplicationContext(), list);
         breedsListAdapter.setOnItemClickListener(
-                new BreedsListAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BreedObject breedObject) {
-                if (breedObject.getSubBreeds().size() > 0) {
-                    //SubBreedsActivity.start(MainActivity.this, breedObject.getBreed(), breedObject.getTitle(), breedObject.getImageUri());
-                    SubBreedsFragmentsActivity.start(MainActivity.this, breedObject.getBreed(), breedObject.getTitle(), breedObject.getImageUri());
-                } else {
-                    String subBreed = "";
-                    if (breedObject.getSubBreeds().size() == 1) {
-                        subBreed = breedObject.getSubBreeds().get(0);
+                (breedObject) -> {
+                    if (breedObject.getSubBreeds().size() > 0) {
+                        SubBreedsFragmentsActivity.start(MainActivity.this, breedObject.getBreed(), breedObject.getTitle(), breedObject.getImageUri());
+                    } else {
+                        String subBreed = "";
+                        if (breedObject.getSubBreeds().size() == 1) {
+                            subBreed = breedObject.getSubBreeds().get(0);
+                        }
+                        ImageActivity.start(MainActivity.this, breedObject.getBreed(), subBreed);
                     }
-                    ImageActivity.start(MainActivity.this, breedObject.getBreed(), subBreed);
-                }
-            }
-        }
-        );
+                });
         recyclerView.setAdapter(breedsListAdapter);
     }
 

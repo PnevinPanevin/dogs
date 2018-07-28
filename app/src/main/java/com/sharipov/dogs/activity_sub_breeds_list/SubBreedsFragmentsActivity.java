@@ -13,7 +13,7 @@ import android.widget.ImageView;
 
 import com.sharipov.dogs.R;
 import com.sharipov.dogs.activity_sub_breeds_list.fragment_sub_breeds.SubBreedsFragment;
-import com.sharipov.dogs.activity_sub_breeds_list.fragment_sub_breeds_images.SubBreedsImagesFragment;
+import com.sharipov.dogs.fragment_images_grid.ImagesGridFragment;
 import com.squareup.picasso.Picasso;
 
 public class SubBreedsFragmentsActivity extends AppCompatActivity {
@@ -58,7 +58,6 @@ public class SubBreedsFragmentsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
         tabLayout = findViewById(R.id.tab_layout);
         viewPager = findViewById(R.id.view_pager);
         imageView = findViewById(R.id.image_view);
@@ -69,9 +68,10 @@ public class SubBreedsFragmentsActivity extends AppCompatActivity {
 
         SubBreedsActivityPagerAdapter pagerAdapter = new SubBreedsActivityPagerAdapter(fragmentManager);
         pagerAdapter.addFragment(SubBreedsFragment.newInstance(breed), "Sub breeds");
-        pagerAdapter.addFragment(SubBreedsImagesFragment.newInstance(breed), "Images");
+        pagerAdapter.addFragment(ImagesGridFragment.newInstance(breed, ""), "Images");
         viewPager.setAdapter(pagerAdapter);
 
+        tabLayout.setTabMode(TabLayout.MODE_FIXED);
         tabLayout.setupWithViewPager(viewPager);
 
     }

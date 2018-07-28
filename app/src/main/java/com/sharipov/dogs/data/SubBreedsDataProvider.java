@@ -67,7 +67,7 @@ public class SubBreedsDataProvider {
             @Override
             public void onSuccess(List<String> message) {
                 for (String s : message) {
-                    getImageUri(breed, new OnGetImageListener() {
+                    getImageUri(breed, s, new OnGetImageListener() {
                                 @Override
                                 public void onSuccess(String imageUri) {
                                     subBreedsList.add(new SubBreedObject(getTitle(s), s, imageUri));
@@ -95,23 +95,6 @@ public class SubBreedsDataProvider {
 
     private void getImageUri(String breed, String subBreed, SubBreedsDataProvider.OnGetImageListener onGetImageListener) {
         Call<RandomImage> callBreeds = api.getSubBreedImage(breed, subBreed);
-        callBreeds.enqueue(new Callback<RandomImage>() {
-            @Override
-            public void onResponse(Call<RandomImage> call, Response<RandomImage> response) {
-                RandomImage randomImage = response.body();
-                onGetImageListener.onSuccess(randomImage.getMessage());
-            }
-
-            @Override
-            public void onFailure(Call<RandomImage> call, Throwable t) {
-                onGetImageListener.onFail(t);
-                Log.d(TAG, "onFailure: " + t);
-            }
-        });
-    }
-
-    private void getImageUri(String breed, SubBreedsDataProvider.OnGetImageListener onGetImageListener) {
-        Call<RandomImage> callBreeds = api.getBreedImage(breed);
         callBreeds.enqueue(new Callback<RandomImage>() {
             @Override
             public void onResponse(Call<RandomImage> call, Response<RandomImage> response) {

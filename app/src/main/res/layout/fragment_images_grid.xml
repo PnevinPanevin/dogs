@@ -11,6 +11,6 @@
         android:layout_gravity="center_vertical" />
 
     <include layout="@layout/recycler_view_grid_layout"
-        android:id="@+id/sub_breed_image_recycler_view"/>
+        android:id="@+id/image_recycler_view"/>
 
 </FrameLayout>

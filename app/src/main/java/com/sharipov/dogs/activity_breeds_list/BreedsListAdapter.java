@@ -33,7 +33,7 @@ public class BreedsListAdapter extends RecyclerView.Adapter<BreedsListHolder>{
 
     @NonNull
     public BreedsListHolder onCreateViewHolder (ViewGroup parent, int viewType){
-        View view = layoutInflater.inflate(R.layout.breeds_grid_item, parent, false);
+        View view = layoutInflater.inflate(R.layout.dog_grid_item, parent, false);
         return new BreedsListHolder(view, onItemClickListener);
     }
 

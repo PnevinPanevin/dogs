@@ -1,4 +1,4 @@
-package com.sharipov.dogs.activity_sub_breeds_list.fragment_sub_breeds_images;
+package com.sharipov.dogs.fragment_images_grid;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -19,25 +19,26 @@ import com.sharipov.dogs.data.ImageDataProvider;
 
 import java.util.List;
 
-public class SubBreedsImagesFragment extends Fragment{
+public class ImagesGridFragment extends Fragment{
 
     private static final String TAG = "qqq";
     private static final String BREED = "BREED";
-    private static final String TITLE = "TITLE";
-    private static final String IMAGE_URI = "IMAGE_URI";
+    private static final String SUB_BREED = "SUB_BREED";
 
     private String breed;
+    private String subBreed;
     private List<String> imageList;
 
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
-    private SubBreedsImagesAdapter imageAdapter;
+    private ImagesGridAdapter imageAdapter;
 
-    public static Fragment newInstance(String breed){
+    public static Fragment newInstance(String breed, String subBreed){
         Bundle args = new Bundle();
         args.putString(BREED, breed);
+        args.putString(SUB_BREED, subBreed);
 
-        SubBreedsImagesFragment fragment = new SubBreedsImagesFragment();
+        ImagesGridFragment fragment = new ImagesGridFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,21 +52,19 @@ public class SubBreedsImagesFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_sub_breeds_images, container, false);
+        View view = inflater.inflate(R.layout.fragment_images_grid, container, false);
 
-        Log.d(TAG, "onCreateView: start");
-        
         progressBar = view.findViewById(R.id.progress_bar);
-        recyclerView = view.findViewById(R.id.sub_breed_image_recycler_view);
-        ImageDataProvider imageDataProvider = new ImageDataProvider(breed, "");
+        recyclerView = view.findViewById(R.id.image_recycler_view);
+
+        ImageDataProvider imageDataProvider = new ImageDataProvider(breed, subBreed);
         imageDataProvider.getImageList(new ImageDataProvider.OnGetList() {
             @Override
             public void onSuccess(List<String> list) {
-                Log.d(TAG, "onSuccess: ");
                 imageList = list;
                 progressBar.setVisibility(ProgressBar.GONE);
 
-                imageAdapter = new SubBreedsImagesAdapter(getContext(), imageList);
+                imageAdapter = new ImagesGridAdapter(getContext(), imageList);
                 imageAdapter.setOnItemClickListener((String imageUri) -> {
 
                 });
@@ -86,13 +85,14 @@ public class SubBreedsImagesFragment extends Fragment{
         Bundle args = getArguments();
         if (args != null) {
             breed = args.getString(BREED);
+            subBreed = args.getString(SUB_BREED);
         }
     }
 
     private int getSpanCount() {
-        int spanCount = 2;
+        int spanCount = 3;
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            spanCount = 3;
+            spanCount = 4;
         }
         return spanCount;
     }

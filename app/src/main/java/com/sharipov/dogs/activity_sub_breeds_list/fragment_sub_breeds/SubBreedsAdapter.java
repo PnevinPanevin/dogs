@@ -34,7 +34,7 @@ public class SubBreedsAdapter extends RecyclerView.Adapter<SubBreedsHolder> {
     @NonNull
     @Override
     public SubBreedsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.sub_breeds_grid_item, parent, false);
+        View view = layoutInflater.inflate(R.layout.dog_grid_item, parent, false);
         return new SubBreedsHolder(view, onItemClickListener);
     }
 

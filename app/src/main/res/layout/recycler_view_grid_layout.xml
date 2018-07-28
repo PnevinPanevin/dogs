@@ -13,5 +13,5 @@
     app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"
     app:layoutManager="android.support.v7.widget.GridLayoutManager"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:listitem="@layout/breeds_grid_item"
+    tools:listitem="@layout/dog_grid_item"
     tools:spanCount="3"/>

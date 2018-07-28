@@ -89,9 +89,6 @@ public class SubBreedsFragment extends Fragment {
         progressBar = view.findViewById(R.id.progress_bar);
         recyclerView = view.findViewById(R.id.sub_breed_recycler_view);
 
-//        AppCompatActivity activity = (AppCompatActivity) getActivity();
-//        Toolbar toolbar = activity.findViewById(R.id.toolbar_actionbar);
-
         SubBreedsDataProvider dataProvider = new SubBreedsDataProvider(breed);
         dataProvider.getSubBreedsList(new SubBreedsDataProvider.OnGetListListener() {
             @Override
@@ -114,18 +111,10 @@ public class SubBreedsFragment extends Fragment {
     public void initRecyclerView(List<SubBreedObject> list) {
         subBreedsAdapter = new SubBreedsAdapter(getContext(), list);
         subBreedsAdapter.setOnItemClickListener(
-//                new SubBreedsAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(SubBreedObject subBreedObject) {
-//                Log.d(TAG, "onItemClick: " + breed + " " + subBreedObject.getSubBreed());
-//                ImageActivity.start(getContext(), breed, subBreedObject.getSubBreed());
-//            }
-//        }
-                (subBreedObject) -> {
+                subBreedObject -> {
                     Log.d(TAG, "onItemClick: " + breed + " " + subBreedObject.getSubBreed());
                     ImageActivity.start(getContext(), breed, subBreedObject.getSubBreed());
-                }
-        );
+                });
         recyclerView.setAdapter(subBreedsAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), getSpanCount()));
     }
