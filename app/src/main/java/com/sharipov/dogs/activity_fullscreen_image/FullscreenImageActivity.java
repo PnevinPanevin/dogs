@@ -1,13 +1,12 @@
 package com.sharipov.dogs.activity_fullscreen_image;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
-import android.support.v4.view.ViewCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -20,7 +19,8 @@ import com.squareup.picasso.Picasso;
 
 public class FullscreenImageActivity extends AppCompatActivity {
 
-    private static final String IMAGE_URI = "IMAGE_URI";
+    public static final String IMAGE_URI = "IMAGE_URI";
+    public static final String IMAGE_VIEW_TRANSITION = "IMAGE_VIEW_TRANSITION";
 
     private ImageView imageView;
 
@@ -28,8 +28,11 @@ public class FullscreenImageActivity extends AppCompatActivity {
 
     public static void start(FragmentActivity activity, View transitionView, String imageUri) {
 
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        activity, transitionView, IMAGE_URI);
+        ActivityOptionsCompat options = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(activity,
+//                        transitionView, IMAGE_VIEW_TRANSITION
+                        new Pair<>(transitionView, IMAGE_VIEW_TRANSITION)
+                );
         Intent intent = new Intent(activity, FullscreenImageActivity.class);
         intent.putExtra(IMAGE_URI, imageUri);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
@@ -59,7 +62,7 @@ public class FullscreenImageActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.image_view);
         imageUri = getIntent().getStringExtra(IMAGE_URI);
-        ViewCompat.setTransitionName(imageView, IMAGE_URI);
+        imageView.setTransitionName(IMAGE_VIEW_TRANSITION);
         Picasso.get().load(imageUri).into(imageView);
     }
 }
