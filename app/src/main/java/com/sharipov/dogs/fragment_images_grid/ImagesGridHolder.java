@@ -21,7 +21,7 @@ public class ImagesGridHolder extends RecyclerView.ViewHolder {
     public void bindTo(String imageUri) {
         Picasso.get().load(imageUri).into(imageView);
         itemView.setOnClickListener(
-                (View v) -> {
+                v -> {
                     if (onItemClickListener != null) {
                         onItemClickListener.onItemClick(v, imageUri);
                     }

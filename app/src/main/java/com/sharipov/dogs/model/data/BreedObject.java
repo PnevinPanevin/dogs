@@ -1,4 +1,4 @@
-package com.sharipov.dogs.data;
+package com.sharipov.dogs.model.data;
 
 import java.util.List;
 

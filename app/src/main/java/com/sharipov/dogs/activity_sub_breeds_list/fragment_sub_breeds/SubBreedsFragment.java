@@ -16,12 +16,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.sharipov.dogs.R;
 import com.sharipov.dogs.activity_images.ImageActivity;
-import com.sharipov.dogs.data.SubBreedObject;
-import com.sharipov.dogs.data.SubBreedsDataProvider;
+import com.sharipov.dogs.model.data.SubBreedObject;
+import com.sharipov.dogs.model.data_provider.SubBreedsDataProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +66,7 @@ public class SubBreedsFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                subBreedsAdapter.setFilter(SubBreedsDataProvider.getFilteredList(newText.toLowerCase(), subBreedObjectList));
+                subBreedsAdapter.filter(newText);
                 return false;
             }
         });
@@ -90,21 +89,14 @@ public class SubBreedsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.sub_breed_recycler_view);
 
         SubBreedsDataProvider dataProvider = new SubBreedsDataProvider(breed);
-        dataProvider.getSubBreedsList(new SubBreedsDataProvider.OnGetListListener() {
-            @Override
-            public void onSuccess(List<SubBreedObject> subBreedObjectList) {
-                SubBreedsFragment.this.subBreedObjectList = subBreedObjectList;
-                progressBar.setVisibility(ProgressBar.GONE);
-
-                initRecyclerView(subBreedObjectList);
-            }
-
-            @Override
-            public void onFail(Throwable t) {
-                Toast.makeText(getContext(), t.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        dataProvider.getSubBreedsList(
+                subBreedObjects -> {
+                    subBreedObjectList = subBreedObjects;
+                    progressBar.setVisibility(ProgressBar.GONE);
+                    initRecyclerView(subBreedObjectList);
+                },
+                throwable -> Log.d(TAG, "onCreateView: " + throwable.toString())
+        );
         return view;
     }
 

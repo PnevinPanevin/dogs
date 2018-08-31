@@ -1,18 +1,16 @@
-package com.sharipov.dogs.response_structures;
+package com.sharipov.dogs.model.response;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ImageList {
+public class RandomImage {
 
     @SerializedName("status")
     @Expose
     private String status;
     @SerializedName("message")
     @Expose
-    private List<String> message = new ArrayList<String>();
+    private String message;
 
     public String getStatus() {
         return status;
@@ -22,11 +20,11 @@ public class ImageList {
         this.status = status;
     }
 
-    public List<String> getMessage() {
+    public String getMessage() {
         return message;
     }
 
-    public void setMessage(List<String> message) {
+    public void setMessage(String message) {
         this.message = message;
     }
 

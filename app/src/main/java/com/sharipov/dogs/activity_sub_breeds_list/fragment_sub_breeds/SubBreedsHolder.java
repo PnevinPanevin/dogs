@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sharipov.dogs.data.SubBreedObject;
+import com.sharipov.dogs.model.data.SubBreedObject;
 import com.sharipov.dogs.R;
 import com.squareup.picasso.Picasso;
 
@@ -27,12 +27,9 @@ public class SubBreedsHolder extends RecyclerView.ViewHolder {
         textView.setText(subBreedObject.getTitle());
         Picasso.get().load(subBreedObject.getImageUri()).into(imageView);
 
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(subBreedObject);
-                }
+        itemView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(subBreedObject);
             }
         });
     }

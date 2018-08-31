@@ -1,9 +1,6 @@
 package com.sharipov.dogs.activity_breeds_list;
 
-import android.content.Context;
 import android.content.res.Configuration;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,14 +14,12 @@ import android.widget.Toast;
 
 import com.sharipov.dogs.activity_images.ImageActivity;
 import com.sharipov.dogs.activity_sub_breeds_list.SubBreedsFragmentsActivity;
-import com.sharipov.dogs.data.BreedObject;
-import com.sharipov.dogs.data.BreedsDataProvider;
+import com.sharipov.dogs.model.data.BreedObject;
+import com.sharipov.dogs.model.data_provider.BreedsDataProvider;
 import com.sharipov.dogs.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.Cache;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                initRecyclerView(getSpanCount(), BreedsDataProvider.getFilteredList(newText.toLowerCase(), breedObjects));
+                breedsListAdapter.filter(newText);
                 return false;
             }
         });
@@ -71,19 +66,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void getDataFromProvider() {
         BreedsDataProvider breedsDataProvider = new BreedsDataProvider();
-        breedsDataProvider.getBreedObjectList(new BreedsDataProvider.OnGetListListener() {
-            @Override
-            public void onSuccess(List<BreedObject> breedList) {
-                breedObjects = breedList;
-                progressBar.setVisibility(ProgressBar.GONE);
-                initRecyclerView(getSpanCount(), breedObjects);
-            }
-
-            @Override
-            public void onFail(Throwable t) {
-                Toast.makeText(MainActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        breedsDataProvider.getBreedObjectList(
+                breedList -> {
+                    breedObjects = breedList;
+                    progressBar.setVisibility(ProgressBar.GONE);
+                    initRecyclerView(getSpanCount(), breedObjects);
+                },
+                throwable -> Toast.makeText(MainActivity.this, throwable.toString(), Toast.LENGTH_SHORT).show()
+        );
     }
 
     private void initToolbar() {
@@ -96,9 +86,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), spanCount));
         breedsListAdapter = new BreedsListAdapter(getApplicationContext(), list);
         breedsListAdapter.setOnItemClickListener(
-                (breedObject) -> {
+                (transitionImageView, breedObject) -> {
                     if (breedObject.getSubBreeds().size() > 0) {
-                        SubBreedsFragmentsActivity.start(MainActivity.this, breedObject.getBreed(), breedObject.getTitle(), breedObject.getImageUri());
+                        SubBreedsFragmentsActivity.start(MainActivity.this, breedObject.getBreed(), breedObject.getTitle(), breedObject.getImageUri(), transitionImageView);
                     } else {
                         String subBreed = "";
                         if (breedObject.getSubBreeds().size() == 1) {

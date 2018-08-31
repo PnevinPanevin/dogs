@@ -7,18 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sharipov.dogs.data.SubBreedObject;
+import com.sharipov.dogs.model.data.SubBreedObject;
 import com.sharipov.dogs.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SubBreedsAdapter extends RecyclerView.Adapter<SubBreedsHolder> {
 
     private LayoutInflater layoutInflater;
     private List<SubBreedObject> subBreedObjects;
+    private List<SubBreedObject> subBreedsFiltered;
     private SubBreedsAdapter.OnItemClickListener onItemClickListener;
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         void onItemClick(SubBreedObject subBreedObject);
     }
 
@@ -26,9 +28,10 @@ public class SubBreedsAdapter extends RecyclerView.Adapter<SubBreedsHolder> {
         this.onItemClickListener = onItemClickListener;
     }
 
-    public SubBreedsAdapter(Context context, List<SubBreedObject> subBreedObjects){
+    public SubBreedsAdapter(Context context, List<SubBreedObject> subBreedObjects) {
         layoutInflater = LayoutInflater.from(context);
         this.subBreedObjects = subBreedObjects;
+        this.subBreedsFiltered = subBreedObjects;
     }
 
     @NonNull
@@ -40,17 +43,33 @@ public class SubBreedsAdapter extends RecyclerView.Adapter<SubBreedsHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull SubBreedsHolder holder, int position) {
-        holder.bindTo(subBreedObjects.get(position));
+        holder.bindTo(subBreedsFiltered.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return subBreedObjects.size();
+        return subBreedsFiltered.size();
     }
 
-    public void setFilter(List<SubBreedObject> list){
+    public void setFilter(String query, List<SubBreedObject> list) {
         subBreedObjects.clear();
         subBreedObjects.addAll(list);
+        notifyDataSetChanged();
+    }
+
+
+    public void filter(String query) {
+        if (query.isEmpty()) {
+            subBreedsFiltered = subBreedObjects;
+        } else {
+            List<SubBreedObject> filteredList = new ArrayList<>();
+            for (SubBreedObject b : subBreedObjects) {
+                if (b.getSubBreed().contains(query)) {
+                    filteredList.add(b);
+                }
+            }
+            subBreedsFiltered = filteredList;
+        }
         notifyDataSetChanged();
     }
 }

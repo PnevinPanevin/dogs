@@ -1,19 +1,19 @@
-package com.sharipov.dogs.data;
-
-import com.sharipov.dogs.response_structures.Api;
+package com.sharipov.dogs.model.data_provider;
 
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ApiInstance {
+public class ApiManager {
 
     private static Api api;
-    public static final ApiInstance INSTANCE = new ApiInstance();
+    public static final ApiManager INSTANCE = new ApiManager();
 
-    private ApiInstance() {
+    private ApiManager() {
         api =  new Retrofit.Builder()
                 .baseUrl(Api.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build().create(Api.class);
     }
 

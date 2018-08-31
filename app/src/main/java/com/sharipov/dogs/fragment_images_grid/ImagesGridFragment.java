@@ -11,13 +11,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.sharipov.dogs.R;
 import com.sharipov.dogs.activity_fullscreen_image.FullscreenImageActivity;
-import com.sharipov.dogs.data.ImageDataProvider;
+import com.sharipov.dogs.model.data_provider.ImageDataProvider;
 
 import java.util.List;
 
@@ -60,27 +58,23 @@ public class ImagesGridFragment extends Fragment {
         recyclerView = view.findViewById(R.id.image_recycler_view);
 
         ImageDataProvider imageDataProvider = new ImageDataProvider(breed, subBreed);
-        imageDataProvider.getImageList(new ImageDataProvider.OnGetList() {
-            @Override
-            public void onSuccess(List<String> list) {
-                imageList = list;
-                progressBar.setVisibility(ProgressBar.GONE);
-
-                imageAdapter = new ImagesGridAdapter(getContext(), imageList);
-                imageAdapter.setOnItemClickListener(
-                        (parent, imageUri) -> FullscreenImageActivity.
-                                start(getActivity(), parent.findViewById(R.id.image_view), imageUri)
-                );
-                recyclerView.setAdapter(imageAdapter);
-                recyclerView.setLayoutManager(new GridLayoutManager(getContext(), getSpanCount()));
-            }
-
-            @Override
-            public void onFail(Throwable t) {
-                Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "onFail: " + t.getLocalizedMessage());
-            }
-        });
+        imageDataProvider.getImageList(
+                list -> {
+                    imageList = list;
+                    progressBar.setVisibility(ProgressBar.GONE);
+                    imageAdapter = new ImagesGridAdapter(getContext(), imageList);
+                    imageAdapter.setOnItemClickListener(
+                            (parent, imageUri) ->
+                                    FullscreenImageActivity.start(
+                                            getActivity(),
+                                            parent.findViewById(R.id.image_view),
+                                            imageUri)
+                    );
+                    recyclerView.setAdapter(imageAdapter);
+                    recyclerView.setLayoutManager(new GridLayoutManager(getContext(), getSpanCount()));
+                },
+                throwable -> Log.d(TAG, "onFail: " + throwable.toString())
+        );
         return view;
     }
 

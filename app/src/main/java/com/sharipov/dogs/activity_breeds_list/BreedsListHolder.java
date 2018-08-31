@@ -1,12 +1,11 @@
 package com.sharipov.dogs.activity_breeds_list;
 
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sharipov.dogs.data.BreedObject;
+import com.sharipov.dogs.model.data.BreedObject;
 import com.sharipov.dogs.R;
 import com.squareup.picasso.Picasso;
 
@@ -27,14 +26,12 @@ public class BreedsListHolder extends RecyclerView.ViewHolder {
     public void bindTo(BreedObject breedObject) {
         textView.setText(breedObject.getTitle());
         Picasso.get().load(breedObject.getImageUri()).into(imageView);
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(breedObject);
-                }
-            }
-        });
+        itemView.setOnClickListener(
+                v -> {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onItemClick(v, breedObject);
+                    }
+                });
     }
 
 }

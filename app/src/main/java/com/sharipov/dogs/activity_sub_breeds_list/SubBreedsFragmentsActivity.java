@@ -1,13 +1,17 @@
 package com.sharipov.dogs.activity_sub_breeds_list;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
@@ -21,6 +25,7 @@ public class SubBreedsFragmentsActivity extends AppCompatActivity {
     public static final String BREED = "BREED";
     public static final String TITLE = "TITLE";
     public static final String IMAGE_URI = "IMAGE_URI";
+    public static final String TRANSITION_IMAGE_VIEW = "TRANSITION_IMAGE_VIEW";
 
     private String breed;
     private String title;
@@ -31,12 +36,14 @@ public class SubBreedsFragmentsActivity extends AppCompatActivity {
     private ImageView imageView;
     private FragmentManager fragmentManager;
 
-    public static void start(Context context, String breed, String title, String imageUri) {
-        Intent starter = new Intent(context, SubBreedsFragmentsActivity.class);
+    public static void start(AppCompatActivity activity, String breed, String title, String imageUri, View transitionView) {
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transitionView, TRANSITION_IMAGE_VIEW);
+
+        Intent starter = new Intent(activity, SubBreedsFragmentsActivity.class);
         starter.putExtra(BREED, breed);
         starter.putExtra(TITLE, title);
         starter.putExtra(IMAGE_URI, imageUri);
-        context.startActivity(starter);
+        ActivityCompat.startActivity(activity, starter, options.toBundle());
     }
 
     @Override
@@ -61,6 +68,7 @@ public class SubBreedsFragmentsActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tab_layout);
         viewPager = findViewById(R.id.view_pager);
         imageView = findViewById(R.id.image_view);
+        imageView.setTransitionName(TRANSITION_IMAGE_VIEW);
         Picasso.get().load(imageUri).into(imageView);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

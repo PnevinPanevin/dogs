@@ -1,18 +1,19 @@
-package com.sharipov.dogs.response_structures;
+package com.sharipov.dogs.model.response;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SubBreeds {
+import java.util.HashMap;
+import java.util.List;
+
+public class Breeds {
 
     @SerializedName("status")
     @Expose
     private String status;
     @SerializedName("message")
     @Expose
-    private List<String> message = new ArrayList<String>();
+    private HashMap<String, List<String>> message;
 
     public String getStatus() {
         return status;
@@ -22,11 +23,11 @@ public class SubBreeds {
         this.status = status;
     }
 
-    public List<String> getMessage() {
+    public HashMap<String, List<String>> getMessage() {
         return message;
     }
 
-    public void setMessage(List<String> message) {
+    public void setMessage(HashMap<String, List<String>> message) {
         this.message = message;
     }
 

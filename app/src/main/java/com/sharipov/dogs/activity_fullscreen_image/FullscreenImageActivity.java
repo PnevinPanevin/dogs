@@ -29,10 +29,7 @@ public class FullscreenImageActivity extends AppCompatActivity {
     public static void start(FragmentActivity activity, View transitionView, String imageUri) {
 
         ActivityOptionsCompat options = ActivityOptionsCompat
-                .makeSceneTransitionAnimation(activity,
-//                        transitionView, IMAGE_VIEW_TRANSITION
-                        new Pair<>(transitionView, IMAGE_VIEW_TRANSITION)
-                );
+                .makeSceneTransitionAnimation(activity, transitionView, IMAGE_VIEW_TRANSITION);
         Intent intent = new Intent(activity, FullscreenImageActivity.class);
         intent.putExtra(IMAGE_URI, imageUri);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
