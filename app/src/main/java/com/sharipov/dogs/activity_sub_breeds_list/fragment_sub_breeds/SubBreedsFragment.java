@@ -88,7 +88,7 @@ public class SubBreedsFragment extends Fragment {
         progressBar = view.findViewById(R.id.progress_bar);
         recyclerView = view.findViewById(R.id.sub_breed_recycler_view);
 
-        SubBreedsDataProvider dataProvider = new SubBreedsDataProvider(breed);
+        SubBreedsDataProvider dataProvider = new SubBreedsDataProvider(breed, getActivity().getCacheDir());
         dataProvider.getSubBreedsList(
                 subBreedObjects -> {
                     subBreedObjectList = subBreedObjects;

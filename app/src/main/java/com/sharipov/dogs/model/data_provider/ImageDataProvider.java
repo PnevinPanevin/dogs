@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.sharipov.dogs.model.response.ImageList;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +19,11 @@ public class ImageDataProvider {
     private Api api;
     private List<String> imageUriList;
     private String breed, subBreed;
-    private Disposable imageList;
 
-    public ImageDataProvider(String breed, String subBreed){
+    public ImageDataProvider(String breed, String subBreed, File cacheDir){
         this.breed = breed;
         this.subBreed = subBreed;
-        api = ApiManager.getApi();
+        api = ApiManager.getApi(cacheDir);
         imageUriList = new ArrayList<>();
     }
 
@@ -35,7 +35,7 @@ public class ImageDataProvider {
             } else {
                 imageListObservable = api.getSubBreedImageList(breed, subBreed);
             }
-            imageList = imageListObservable.subscribeOn(Schedulers.io())
+            imageListObservable.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .map(ImageList::getMessage)
                     .subscribe(
@@ -49,9 +49,5 @@ public class ImageDataProvider {
         } else {
             onGetList.onSuccess(imageUriList);
         }
-    }
-
-    public void dispose(){
-        if (!imageList.isDisposed()) imageList.dispose();
     }
 }

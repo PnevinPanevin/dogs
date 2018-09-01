@@ -6,6 +6,7 @@ import com.sharipov.dogs.model.data.SubBreedObject;
 import com.sharipov.dogs.model.response.RandomImage;
 import com.sharipov.dogs.model.response.SubBreeds;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,9 +21,9 @@ public class SubBreedsDataProvider {
     private Api api;
     private List<SubBreedObject> subBreedsList;
 
-    public SubBreedsDataProvider(String breed) {
+    public SubBreedsDataProvider(String breed, File cacheDir) {
         this.breed = breed;
-        api = ApiManager.getApi();
+        api = ApiManager.getApi(cacheDir);
         subBreedsList = new LinkedList<>();
     }
 

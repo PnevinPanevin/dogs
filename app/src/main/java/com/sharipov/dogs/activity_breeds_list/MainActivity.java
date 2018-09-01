@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_bar);
         initToolbar();
         getDataFromProvider();
+
+
     }
 
     @Override
@@ -65,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getDataFromProvider() {
-        BreedsDataProvider breedsDataProvider = new BreedsDataProvider();
-        breedsDataProvider.getBreedObjectList(
+        BreedsDataProvider provider = new BreedsDataProvider(getCacheDir());
+        provider.getBreedObjectList(
                 breedList -> {
                     breedObjects = breedList;
                     progressBar.setVisibility(ProgressBar.GONE);

@@ -57,7 +57,7 @@ public class ImagesGridFragment extends Fragment {
         progressBar = view.findViewById(R.id.progress_bar);
         recyclerView = view.findViewById(R.id.image_recycler_view);
 
-        ImageDataProvider imageDataProvider = new ImageDataProvider(breed, subBreed);
+        ImageDataProvider imageDataProvider = new ImageDataProvider(breed, subBreed, getActivity().getCacheDir());
         imageDataProvider.getImageList(
                 list -> {
                     imageList = list;
