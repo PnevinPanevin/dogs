@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
+import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.sharipov.dogs.R;
 import com.sharipov.dogs.activity_images.ImageActivity;
 import com.sharipov.dogs.model.data.SubBreedObject;
@@ -24,13 +26,18 @@ import com.sharipov.dogs.model.data_provider.SubBreedsDataProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class SubBreedsFragment extends Fragment {
 
     private static final String TAG = "qqq";
     private static final String BREED = "BREED";
-    private static final String TITLE = "TITLE";
-    private static final String IMAGE_URI = "IMAGE_URI";
+    public static final int DEBOUNCE_TIME_MS = 300;
 
     private RecyclerView recyclerView;
     private SubBreedsAdapter subBreedsAdapter;
@@ -39,6 +46,7 @@ public class SubBreedsFragment extends Fragment {
     private MenuItem searchMenuItem;
 
     private List<SubBreedObject> subBreedObjectList = new ArrayList<>();
+    private Disposable searchTextChanges;
 
     private String breed;
 
@@ -58,18 +66,15 @@ public class SubBreedsFragment extends Fragment {
         searchView = (SearchView) searchMenuItem.getActionView();
         searchView.setQueryHint(getString(R.string.search_hint));
         searchView.setIconifiedByDefault(true);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                subBreedsAdapter.filter(newText);
-                return false;
-            }
-        });
+        searchTextChanges = RxSearchView.queryTextChanges(searchView)
+                .skipInitialValue()
+                .debounce(DEBOUNCE_TIME_MS, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(query -> query.toString())
+                .subscribe(
+                        query -> subBreedsAdapter.filter(query),
+                        throwable -> Log.d(TAG, "onCreateOptionsMenu: " + throwable.toString())
+                );
         super.onCreateOptionsMenu(menu, menuInflater);
     }
 
@@ -98,6 +103,12 @@ public class SubBreedsFragment extends Fragment {
                 throwable -> Log.d(TAG, "onCreateView: " + throwable.toString())
         );
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        searchTextChanges.dispose();
     }
 
     public void initRecyclerView(List<SubBreedObject> list) {

@@ -7,11 +7,13 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.sharipov.dogs.activity_images.ImageActivity;
 import com.sharipov.dogs.activity_sub_breeds_list.SubBreedsFragmentsActivity;
 import com.sharipov.dogs.model.data.BreedObject;
@@ -20,8 +22,16 @@ import com.sharipov.dogs.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String TAG = "qqq";
+    public static final int DEBOUNCE_TIME_MS = 300;
 
     private RecyclerView recyclerView;
     private MenuItem searchMenuItem;
@@ -31,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private BreedsListAdapter breedsListAdapter;
 
     private List<BreedObject> breedObjects = new ArrayList<>();
+    private Disposable searchQueryChanges;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_bar);
         initToolbar();
         getDataFromProvider();
-
-
     }
 
     @Override
@@ -51,18 +60,15 @@ public class MainActivity extends AppCompatActivity {
         searchView = (SearchView) searchMenuItem.getActionView();
         searchView.setQueryHint(getString(R.string.search_hint));
         searchView.setIconifiedByDefault(true);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                breedsListAdapter.filter(newText);
-                return false;
-            }
-        });
+        searchQueryChanges = RxSearchView.queryTextChanges(searchView)
+                .skipInitialValue()
+                .debounce(DEBOUNCE_TIME_MS, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(query -> query.toString())
+                .subscribe(
+                        query -> breedsListAdapter.filter(query),
+                        throwable -> Log.d(TAG, "onCreateOptionsMenu: " + throwable.toString())
+                );
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -108,5 +114,11 @@ public class MainActivity extends AppCompatActivity {
             spanCount = 4;
         }
         return spanCount;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        searchQueryChanges.dispose();
     }
 }

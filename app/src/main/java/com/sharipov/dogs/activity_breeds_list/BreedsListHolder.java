@@ -34,4 +34,5 @@ public class BreedsListHolder extends RecyclerView.ViewHolder {
                 });
     }
 
+
 }
