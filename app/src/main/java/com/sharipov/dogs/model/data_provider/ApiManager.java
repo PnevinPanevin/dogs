@@ -17,12 +17,13 @@ public class ApiManager {
 
     private static Api api;
     private final static int CACHE_SIZE = 10 * 1024 * 1024;
-    private final static int MAX_AGE = 7;
+    private final static int MAX_AGE_DAYS = 1;
     private final static String CACHE_DIRECTORY_NAME = "http-cache";
+
     private final static Interceptor NETWORK_INTERCEPTOR = chain -> {
         Response response = chain.proceed(chain.request());
         CacheControl cacheControl = new CacheControl.Builder()
-                .maxAge(MAX_AGE, TimeUnit.MINUTES)
+                .maxAge(MAX_AGE_DAYS, TimeUnit.DAYS)
                 .build();
         return response.newBuilder()
                 .header("Cache-Control", cacheControl.toString())
